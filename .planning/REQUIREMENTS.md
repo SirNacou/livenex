@@ -97,44 +97,44 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Unassigned | Pending |
-| AUTH-02 | Unassigned | Pending |
-| MON-01 | Unassigned | Pending |
-| MON-02 | Unassigned | Pending |
-| MON-03 | Unassigned | Pending |
-| MON-04 | Unassigned | Pending |
-| MON-05 | Unassigned | Pending |
-| MON-06 | Unassigned | Pending |
-| MON-07 | Unassigned | Pending |
-| MON-08 | Unassigned | Pending |
-| RELY-01 | Unassigned | Pending |
-| RELY-02 | Unassigned | Pending |
-| RELY-03 | Unassigned | Pending |
-| RELY-04 | Unassigned | Pending |
-| ALRT-01 | Unassigned | Pending |
-| ALRT-02 | Unassigned | Pending |
-| ALRT-03 | Unassigned | Pending |
-| ALRT-04 | Unassigned | Pending |
-| ALRT-05 | Unassigned | Pending |
-| INC-01 | Unassigned | Pending |
-| INC-02 | Unassigned | Pending |
-| INC-03 | Unassigned | Pending |
-| INC-04 | Unassigned | Pending |
-| INC-05 | Unassigned | Pending |
-| STAT-01 | Unassigned | Pending |
-| STAT-02 | Unassigned | Pending |
-| STAT-03 | Unassigned | Pending |
-| STAT-04 | Unassigned | Pending |
-| STAT-05 | Unassigned | Pending |
-| RPT-01 | Unassigned | Pending |
-| RPT-02 | Unassigned | Pending |
-| RPT-03 | Unassigned | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| MON-01 | Phase 2 | Pending |
+| MON-02 | Phase 2 | Pending |
+| MON-03 | Phase 2 | Pending |
+| MON-04 | Phase 2 | Pending |
+| MON-05 | Phase 2 | Pending |
+| MON-06 | Phase 2 | Pending |
+| MON-07 | Phase 2 | Pending |
+| MON-08 | Phase 3 | Pending |
+| RELY-01 | Phase 3 | Pending |
+| RELY-02 | Phase 3 | Pending |
+| RELY-03 | Phase 3 | Pending |
+| RELY-04 | Phase 3 | Pending |
+| ALRT-01 | Phase 4 | Pending |
+| ALRT-02 | Phase 4 | Pending |
+| ALRT-03 | Phase 4 | Pending |
+| ALRT-04 | Phase 4 | Pending |
+| ALRT-05 | Phase 4 | Pending |
+| INC-01 | Phase 4 | Pending |
+| INC-02 | Phase 4 | Pending |
+| INC-03 | Phase 4 | Pending |
+| INC-04 | Phase 4 | Pending |
+| INC-05 | Phase 4 | Pending |
+| STAT-01 | Phase 1 | Pending |
+| STAT-02 | Phase 5 | Pending |
+| STAT-03 | Phase 5 | Pending |
+| STAT-04 | Phase 5 | Pending |
+| STAT-05 | Phase 5 | Pending |
+| RPT-01 | Phase 5 | Pending |
+| RPT-02 | Phase 2 | Pending |
+| RPT-03 | Phase 2 | Pending |
 
 **Coverage:**
 - v1 requirements: 32 total
-- Mapped to phases: 0
-- Unmapped: 32 ⚠️
+- Mapped to phases: 32
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-26*
-*Last updated: 2026-03-26 after initial definition*
+*Last updated: 2026-03-26 after roadmap creation*
