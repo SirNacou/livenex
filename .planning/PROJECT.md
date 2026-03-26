@@ -56,6 +56,7 @@ Operationally, confirmed failures should create incidents automatically, schedul
 | Automatic incidents on confirmed failures | Incident tracking should reflect monitoring truth without manual intervention | — Pending |
 | Maintenance windows suppress alerts | Planned work should not create noise or misleading incidents | — Pending |
 | Public status pages are shareable per tag/group | Sharing should be selective instead of all-or-nothing | — Pending |
+| TanStack Start + ElysiaJS with PostgreSQL 18, Redis/BullMQ, Drizzle, Better Auth, Tailwind, and shadcn/ui | Matches the preferred split frontend/backend architecture while keeping a proven data and job-processing backbone | — Pending |
 
 ## Evolution
 
