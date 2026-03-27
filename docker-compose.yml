@@ -1,42 +1,15 @@
 version: '3.8'
 
 services:
-  # Unified Livenex Application (TanStack Start + ElysiaJS)
-  app:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    container_name: livenex-app
-    environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/livenex
-      - REDIS_URL=redis://redis:6379
-      - BETTER_AUTH_SECRET=local-dev-secret
-    ports:
-      - "3000:3000"
-    networks:
-      - livenex-network
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    volumes:
-      - ./src:/app/src
-    command: bun run dev
-
-  # PostgreSQL database
   postgres:
     image: postgres:18-alpine
     container_name: livenex-postgres
     environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=livenex
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: livenex_dev
     ports:
       - "5432:5432"
-    networks:
-      - livenex-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -44,15 +17,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - livenex-network
 
-  # Redis (for job queue - optional for Phase 1)
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     container_name: livenex-redis
     ports:
       - "6379:6379"
-    networks:
-      - livenex-network
     volumes:
       - redis_data:/data
     healthcheck:
@@ -60,13 +32,39 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - livenex-network
 
-networks:
-  livenex-network:
-    driver: bridge
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: livenex-app
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/livenex_dev
+      REDIS_URL: redis://redis:6379
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: http://localhost:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - livenex-network
+    # For development hot reload
+    command: bun run dev
 
 volumes:
   postgres_data:
   redis_data:
-  caddy_data:
-  caddy_config:
+
+networks:
+  livenex-network:
+    driver: bridge
