@@ -9,14 +9,14 @@ See: .planning/PROJECT.md (updated 2026-03-26)
 
 ## Current Position
 
-Phase: 1.2 of 5 (TanStack Start + ElysiaJS Integration) — COMPLETED ✓
+Phase: 1 Wave 2A of 5 (Backend Core - Authentication) — COMPLETED ✓
 Context: Captured ✓
-Plan: 1 of 1 in current phase — COMPLETED ✓
-Status: Ready for Phase 1 - Private Access Foundation (Authentication)
+Plan: Wave 2A of 5 in Phase 1 — COMPLETED ✓
+Status: Ready for Phase 1 Wave 2B (Frontend Core - Login & Dashboard)
 
-Last activity: 2026-03-27 - Completed quick task 260327-docker-unified: update Docker configuration for unified architecture
+Last activity: 2026-03-27 17:19 UTC - Completed Wave 2A: Backend Core - Authentication Routes
 
-Progress: [███░░░░░░░] 30% (unified full-stack application ready for auth implementation)
+Progress: [████░░░░░░] 40% (authentication endpoints ready, session middleware in place, 7/7 tests passing)
 
 ## Quick Tasks Completed
 
@@ -44,11 +44,11 @@ Progress: [███░░░░░░░] 30% (unified full-stack application r
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 45 minutes
-- Total execution time: 0.75 hours
+- Total plans completed: 2
+- Average duration: 25 minutes
+- Total execution time: 0.84 hours
 
-**Current Phase (01.2):**
+**Wave 1 (01.2-tanstack-integration):**
 - Tasks: 7/7 completed
 - Commits: 4 substantive commits
 - Files created: 9
@@ -58,6 +58,17 @@ Progress: [███░░░░░░░] 30% (unified full-stack application r
 - TypeScript errors: 0
 - Build time: 1.60s
 - Dev server startup: 219ms
+
+**Wave 2A (Backend Core - Authentication):**
+- Tasks: 4/4 completed
+- Commits: 5 substantive commits (4 tasks + 1 summary)
+- Files created: 5 (errors.ts, constants.ts, api.ts, middleware/auth.ts, tests/auth.test.ts)
+- Files modified: 2 (auth.ts, server/index.ts)
+- Duration: ~5 minutes (estimated 6-8 hours)
+- TypeScript errors: 0
+- Build time: 5.33s
+- Unit tests: 7/7 passing
+- Test execution: 6ms
 
 ## Accumulated Context
 
@@ -76,20 +87,35 @@ Locked in Phase 1 CONTEXT.md and DISCUSSION-LOG.md
    - Rationale: Auto-generates types, no separate schemas, native Elysia integration
    - Trade-off: Elysia-only ecosystem
 
+**Phase 01 Wave 2A Decisions (1 new):**
+1. **Leverage better-auth's Native Endpoints** - Use better-auth's built-in routes instead of custom implementations
+   - Rationale: better-auth handles all complexity (hashing, sessions, cookies, CSRF)
+   - Result: 0 custom auth route code, better security, lower maintenance
+   - Implemented: All endpoints (signup, signin, logout, session) work via auth.handler()
+
 **Key principles:**
 - Single-user operation is non-negotiable
 - Private by default with opt-in public pages
 - OIDC flexibility for authentication backends
 - API keys as the primary automation interface
-- Secure session handling (httpOnly cookies, CORS disabled)
-- **NEW:** Type safety from backend to frontend (zero any types in API contracts)
+- Secure session handling (httpOnly cookies, SameSite=Strict)
+- **NEW:** Leverage frameworks' native capabilities (better-auth, TanStack routing)
 
 ## Session Continuity
 
-Last session: 2026-03-27 22:35 UTC
-Stopped at: Completed phase 01.2-tanstack-integration (plan 01, 7/7 tasks)
-Next phase: 01-private-access-foundation (authentication implementation)
-Summary file: `.planning/phases/01.2-tanstack-integration/01.2-PLAN-SUMMARY.md`
+Last session: 2026-03-27 17:19 UTC
+Stopped at: Completed Phase 1 Wave 2A - Backend Core - Authentication Routes (4/4 tasks completed)
+Next phase: Phase 1 Wave 2B - Frontend Core - Login & Dashboard (parallel with 2A, independent of this wave)
+Summary file: `.planning/PHASE-1-WAVE-2A-SUMMARY.md`
+
+**Wave 2A Achievements:**
+- ✅ better-auth integration with Drizzle ORM
+- ✅ Auth endpoints ready (signup, signin, logout, session check)
+- ✅ Session validation middleware implemented
+- ✅ 7/7 unit tests passing
+- ✅ 4 commits with 252 lines of code
+- ✅ 0 deviations from plan
+
 
 ---
-*State updated: 2026-03-27 22:37*
+*State updated: 2026-03-27 17:19 UTC - Wave 2A Complete*
