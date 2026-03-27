@@ -1,0 +1,36 @@
+# Frontend (TanStack Start) build and runtime
+# Multi-stage build for optimal image size
+
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy monorepo files
+COPY package.json package-lock.json ./
+COPY packages/frontend ./packages/frontend
+COPY packages/shared ./packages/shared
+COPY tsconfig.json app.config.ts ./
+
+# Install dependencies
+RUN npm ci
+
+# Build frontend
+RUN npm run build --workspace=@livenex/frontend
+
+# Runtime stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy built frontend
+COPY --from=builder /app/packages/frontend/dist ./dist
+COPY --from=builder /app/packages/frontend/package.json ./
+
+# Install production dependencies only
+RUN npm ci --omit=dev
+
+# Expose port (internal, mapped by docker-compose)
+EXPOSE 3000
+
+# Start frontend
+CMD ["npm", "run", "preview"]
