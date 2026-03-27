@@ -31,6 +31,29 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: TBD
 **UI hint**: yes
 
+### Phase 01.1: Project Structure & Organization (INSERTED)
+
+**Goal:** Establish architectural foundation with project structure, database schema patterns, API route organization, naming conventions, and error handling for all downstream phases.
+
+**Requirements**: None (foundational infrastructure, no user-facing requirements)
+
+**Depends on:** Phase 1 (context from decisions)
+
+**Plans:** 1 plan completed
+
+Plans:
+- [x] 01.1-01-PLAN.md — Project structure, database foundation, API envelope patterns, naming conventions
+
+**Status:** Complete — ready for Phase 1 implementation
+
+**Key deliverables:**
+- Directory structure following TanStack Start + ElysiaJS conventions
+- Database schema foundation (users, sessions, api_keys, audit_logs)
+- API response envelope pattern (ApiResponse<T> | ApiError)
+- Error handling hierarchy
+- Naming conventions documentation
+- Route and schema pattern templates for Phase 2+
+
 ### Phase 2: Monitor Setup And Organization
 **Goal**: Users can create and manage the supported monitor types quickly from one private dashboard and keep them organized with simple tags/groups.
 **Depends on**: Phase 1
@@ -83,10 +106,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
+Phases execute in numeric order: 1.1 → 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
+| 1.1 Project Structure | 1/1 | Complete | ✓ 2026-03-27 |
 | 1. Private Access Foundation | 0/TBD | Not started | - |
 | 2. Monitor Setup And Organization | 0/TBD | Not started | - |
 | 3. State Evaluation And Reliability Signals | 0/TBD | Not started | - |
