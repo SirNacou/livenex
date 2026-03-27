@@ -1,11 +1,15 @@
 # Dependencies
 node_modules/
+packages/*/node_modules/
 
-# Lock files — bun.lock is committed for reproducible installs
-# Other package managers' lock files are not tracked
+# Lock files — committed per-package for reproducible installs
+# Root level lock files are not committed (each package manages its own)
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
+packages/*/pnpm-lock.yaml
+packages/*/package-lock.json
+packages/*/yarn.lock
 
 # Build outputs
 dist/

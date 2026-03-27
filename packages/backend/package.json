@@ -23,8 +23,7 @@
     "better-auth": "^1.1.13",
     "zod": "^3.23.8",
     "uuid": "^9.0.0",
-    "@paralleldrive/cuid2": "^2.2.2",
-    "@livenex/shared": "workspace:*"
+    "@paralleldrive/cuid2": "^2.2.2"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

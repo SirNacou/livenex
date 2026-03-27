@@ -4,30 +4,69 @@ A single-user uptime monitoring, alerting, and status-page app built for persona
 
 ## Getting Started
 
-This project uses **Bun** as the runtime and package manager. Bun v1+ is required.
+This project is a monorepo with independent packages, each with its own package manager setup. **Bun** is the recommended runtime and package manager (Bun v1+ required).
+
+### Project Structure
+
+```
+livenex/
+├── packages/
+│   ├── backend/        # ElysiaJS API server
+│   ├── frontend/       # TanStack Start frontend
+│   └── shared/         # Shared types and utilities
+└── docker-compose.yml  # Local development environment
+```
 
 ### Installation & Development
 
-To run this application:
+Each package is independently managed. To install dependencies:
 
+**Backend:**
 ```bash
+cd packages/backend
 bun install
 bun run dev
 ```
 
+**Frontend:**
+```bash
+cd packages/frontend
+bun install
+bun run dev
+```
+
+**Shared:**
+```bash
+cd packages/shared
+bun install
+bun run build
+```
+
+Or run services via Docker:
+```bash
+docker-compose up
+```
+
 ### Building For Production
 
-To build this application for production:
-
+**Backend:**
 ```bash
+cd packages/backend
+bun run build
+```
+
+**Frontend:**
+```bash
+cd packages/frontend
 bun run build
 ```
 
 ### Testing
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+Each package has its own tests. Run tests within each package:
 
 ```bash
+cd packages/[backend|frontend|shared]
 bun test
 ```
 
