@@ -9,14 +9,14 @@ See: .planning/PROJECT.md (updated 2026-03-26)
 
 ## Current Position
 
-Phase: 1 Wave 2A of 5 (Backend Core - Authentication) — COMPLETED ✓
+Phase: 1 Wave 2B of 5 (Frontend Core - Login & Dashboard) — COMPLETED ✓
 Context: Captured ✓
-Plan: Wave 2A of 5 in Phase 1 — COMPLETED ✓
-Status: Ready for Phase 1 Wave 2B (Frontend Core - Login & Dashboard)
+Plan: Wave 2B of 5 in Phase 1 — COMPLETED ✓
+Status: Ready for Phase 1 Wave 3 (API Key System)
 
-Last activity: 2026-03-27 17:19 UTC - Completed Wave 2A: Backend Core - Authentication Routes
+Last activity: 2026-03-27 17:25 UTC - Completed Wave 2B: Frontend Core - Login & Dashboard
 
-Progress: [████░░░░░░] 40% (authentication endpoints ready, session middleware in place, 7/7 tests passing)
+Progress: [██████░░░░] 50% (login/dashboard UI complete, session management working, 17/17 components/routes built)
 
 ## Quick Tasks Completed
 
@@ -103,10 +103,10 @@ Locked in Phase 1 CONTEXT.md and DISCUSSION-LOG.md
 
 ## Session Continuity
 
-Last session: 2026-03-27 17:19 UTC
-Stopped at: Completed Phase 1 Wave 2A - Backend Core - Authentication Routes (4/4 tasks completed)
-Next phase: Phase 1 Wave 2B - Frontend Core - Login & Dashboard (parallel with 2A, independent of this wave)
-Summary file: `.planning/PHASE-1-WAVE-2A-SUMMARY.md`
+Last session: 2026-03-27 17:25 UTC
+Stopped at: Completed Phase 1 Wave 2B - Frontend Core - Login & Dashboard (3/3 tasks completed)
+Next phase: Phase 1 Wave 3 - API Key System (builds on Waves 2A/2B foundation)
+Summary file: `.planning/PHASE-1-WAVE-2B-SUMMARY.md`
 
 **Wave 2A Achievements:**
 - ✅ better-auth integration with Drizzle ORM
@@ -116,6 +116,25 @@ Summary file: `.planning/PHASE-1-WAVE-2A-SUMMARY.md`
 - ✅ 4 commits with 252 lines of code
 - ✅ 0 deviations from plan
 
+**Wave 2B Achievements:**
+- ✅ Login page with form validation and email/password fields
+- ✅ Signup page with new user onboarding
+- ✅ Protected dashboard with user welcome message
+- ✅ ProtectedRoute wrapper for authentication boundary
+- ✅ useAuth hook for client-side session management
+- ✅ Logout functionality with session clearing
+- ✅ Responsive design for mobile/desktop
+- ✅ 6 files created, 1 modified
+- ✅ 515 lines of code
+- ✅ 3 substantive commits
+- ✅ 0 deviations from plan
+
+**Combined Progress (Wave 2A + 2B):**
+- Backend authentication API fully implemented
+- Frontend login/signup/dashboard UI complete
+- Session-based auth working end-to-end
+- 10 commits total, 767 lines of code
+- Ready for Wave 3 API key system
 
 ---
-*State updated: 2026-03-27 17:19 UTC - Wave 2A Complete*
+*State updated: 2026-03-27 17:25 UTC - Wave 2B Complete*
