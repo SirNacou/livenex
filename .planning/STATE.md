@@ -14,9 +14,15 @@ Context: Captured ✓
 Plan: 0 of TBD in current phase
 Status: Ready to plan
 
-Last activity: 2026-03-27 - Captured Phase 1.1 context through discussion-phase workflow.
+Last activity: 2026-03-27 - Completed quick task 260327: npm → bun migration
 
 Progress: [░░░░░░░░░░] 5% (context gathering complete for Phase 1)
+
+## Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260327 | Change from npm to bun across all packages and docker setup | 2026-03-27 | 563a4c2 | [260327-npm-to-bun](./quick/260327-npm-to-bun/) |
 
 ## Phase 1 Context Summary
 
