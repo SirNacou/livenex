@@ -14,8 +14,10 @@ export default defineConfig({
     external: ['elysia', 'better-auth', 'drizzle-orm', 'pg']
   },
   server: {
+    host: '0.0.0.0',
     port: 3000,
     middlewareMode: false,
+    strictPort: false,
   },
   build: {
     target: 'node20',
