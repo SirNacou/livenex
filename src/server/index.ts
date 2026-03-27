@@ -1,9 +1,13 @@
 import { Elysia } from "elysia";
 
 const app = new Elysia({ prefix: "/api" })
-	.get("/", () => "Hello World")
-	.get("/hello/:name", ({ params }) => `Hello ${params.name}!`);
+	// Health check endpoint
+	.get("/", () => ({ ok: true, data: "API ready" }))
+	.get("/hello/:name", ({ params }) => ({
+		ok: true,
+		data: `Hello ${params.name}!`,
+	}));
 
-type Server = typeof app;
+export type Server = typeof app;
 
-export { app, type Server };
+export { app };
