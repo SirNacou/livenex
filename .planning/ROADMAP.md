@@ -92,3 +92,18 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 3. State Evaluation And Reliability Signals | 0/TBD | Not started | - |
 | 4. Incidents, Notifications, And Maintenance | 0/TBD | Not started | - |
 | 5. Public Status And Uptime Reporting | 0/TBD | Not started | - |
+
+## Backlog
+
+### Phase 999.1: File-Based Monitor Configuration Like Gatus (BACKLOG)
+
+**Goal:** [Captured for future planning]
+
+**Description:** Allow saving and loading monitor configurations from files (like Gatus) so that if anything breaks, the configuration file can be preserved and used to auto-create monitors. This would enable two ways to create monitors: UI + file config.
+
+**Requirements:** TBD
+
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (promote with /gsd-review-backlog when ready)
