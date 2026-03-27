@@ -15,7 +15,7 @@
 | React | 19.x | UI runtime | TanStack Start's React path keeps the dashboard and public status pages in one app. | HIGH |
 | ElysiaJS | current | Backend HTTP API and service layer | Chosen for monitor/admin APIs and internal backend logic. Official docs say it is optimized for Bun but supports Node too. | MEDIUM |
 | PostgreSQL | 18.x | Primary system of record | Chosen current major release for durable monitoring and incident data. | HIGH |
-| Redis | 7.x compatible | Queue backend and coordination | Required for reliable scheduling and dispatch. | HIGH |
+| Redis | 8.x compatible | Queue backend and coordination | Required for reliable scheduling and dispatch. | HIGH |
 | BullMQ | 5.x | Durable scheduler and job queue | Required for checks, retries, incident evaluation, and notifications. | HIGH |
 
 ### Supporting Libraries

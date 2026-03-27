@@ -17,7 +17,7 @@ The main risks are also clear across the research: false positives from single-c
 
 ### Recommended Stack
 
-The stack recommendation is conventional for this domain because the problem is operational correctness, not novel infrastructure. Next.js 16 and React 19 cover the admin UI, API surface, and public status pages in one codebase. Node 22 is the correct runtime for long-lived workers and network probes. PostgreSQL 17 should remain the single durable source of truth in v1, while Redis 7 and BullMQ 5 provide the minimum reliable coordination layer once checks, retries, and alert delivery leave the request cycle.
+The stack recommendation is conventional for this domain because the problem is operational correctness, not novel infrastructure. Next.js 16 and React 19 cover the admin UI, API surface, and public status pages in one codebase. Node 22 is the correct runtime for long-lived workers and network probes. PostgreSQL 17 should remain the single durable source of truth in v1, while Redis 8 and BullMQ 5 provide the minimum reliable coordination layer once checks, retries, and alert delivery leave the request cycle.
 
 Drizzle keeps the database layer close to SQL, which matters for incident constraints, rollups, and explicit migrations. Zod is mandatory for monitor configs and inbound payloads. Better Auth is sufficient for single-user access. Tailwind, Biome, Vitest, and Playwright are delivery-speed choices, not strategic differentiators.
 
@@ -25,7 +25,7 @@ Drizzle keeps the database layer close to SQL, which matters for incident constr
 - Next.js 16 + React 19: dashboard, admin API, and public status pages — one full-stack frontend surface without splitting apps early
 - Node.js 22: app and worker runtime — long-lived background execution fits Node, not serverless or edge
 - PostgreSQL 17: primary data store — durable incident, check, maintenance, and uptime history in one database
-- Redis 7 + BullMQ 5: scheduling and async coordination — leased jobs, retries, dedupe, and dispatch recovery
+- Redis 8 + BullMQ 5: scheduling and async coordination — leased jobs, retries, dedupe, and dispatch recovery
 - Drizzle + drizzle-kit: schema and query layer — SQL-first control for correctness-heavy domain logic
 - Zod: runtime validation — required for monitor definitions, webhooks, and channel configs
 

@@ -648,7 +648,7 @@ function LoginPage() {
 |------------|------------|-----------|---------|-------|
 | **Node.js** | All | ✅ Yes | 18+ | TanStack Start requires Node.js |
 | **PostgreSQL** | Database | ⚠️ Not running | 18.x | Can use Docker (`docker-compose up`) |
-| **Redis** | Queue (Phase 3+) | ⚠️ Not used yet | 7.x | Not required for Phase 1 |
+| **Redis** | Queue (Phase 3+) | ⚠️ Not used yet | 8.x | Not required for Phase 1 |
 | **Docker** | Optional local dev | ❓ Unknown | Latest | Helpful but not required |
 | **Bun** | Build/runtime | ✅ (npm now) | Latest | Recommended per cleanup plan |
 

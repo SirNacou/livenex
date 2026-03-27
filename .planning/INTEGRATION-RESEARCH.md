@@ -495,7 +495,7 @@ Phase 1.1 integration is complete when:
 
 ### Database & Cache
 - **PostgreSQL 18** — Primary database
-- **Redis 7** — Queue backend (for Phase 2+)
+- **Redis 8** — Queue backend (for Phase 2+)
 
 ### Shared
 - **TypeScript** — Full stack type safety

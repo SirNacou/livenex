@@ -145,7 +145,7 @@ All requirements mapped to Phase 1:
 | Dependency | Required By | Status | Fallback |
 |-----------|------------|--------|----------|
 | **PostgreSQL 18.x** | Session and API key storage | Required | — |
-| **Redis 7.x** | Queue backend for job coordination | Used by later phases (Phase 2+) | — |
+| **Redis 8.x** | Queue backend for job coordination | Used by later phases (Phase 2+) | — |
 | **Node.js runtime** | TanStack Start, ElysiaJS, BullMQ | Required | — |
 | **npm** | Package management | Required | — |
 
