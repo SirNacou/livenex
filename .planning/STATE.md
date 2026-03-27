@@ -14,7 +14,7 @@ Context: Captured ✓
 Plan: 0 of TBD in current phase
 Status: Ready to plan
 
-Last activity: 2026-03-27 - Completed quick task 260327: npm → bun migration
+Last activity: 2026-03-27 - Completed quick task 260327-independent-packages: migrate to independent package management
 
 Progress: [░░░░░░░░░░] 5% (context gathering complete for Phase 1)
 
@@ -22,7 +22,8 @@ Progress: [░░░░░░░░░░] 5% (context gathering complete for Ph
 
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
-| 260327 | Change from npm to bun across all packages and docker setup | 2026-03-27 | 563a4c2 | [260327-npm-to-bun](./quick/260327-npm-to-bun/) |
+| 260327-npm-to-bun | Change from npm to bun across all packages and docker setup | 2026-03-27 | 563a4c2 | [260327-npm-to-bun](./quick/260327-npm-to-bun/) |
+| 260327-independent-packages | Migrate to independent package management (remove workspace) | 2026-03-27 | a5bea92 | [260327-independent-packages](./quick/260327-independent-packages/) |
 
 ## Phase 1 Context Summary
 
