@@ -39,6 +39,7 @@ function Dashboard() {
 							Settings
 						</a>
 						<button
+							type="button"
 							onClick={handleLogout}
 							disabled={isLoading}
 							className="text-red-600 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
