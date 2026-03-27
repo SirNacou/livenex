@@ -1,0 +1,21 @@
+{
+  "name": "livenex",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Livenex - Personal uptime monitoring and status pages",
+  "private": true,
+  "workspaces": [
+    "packages/backend",
+    "packages/frontend",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev": "bun run dev --workspace=@livenex/backend",
+    "build": "bun run build --workspace=@livenex/backend && bun run build --workspace=@livenex/frontend",
+    "test": "bun test",
+    "preview": "bun run preview --workspace=@livenex/frontend"
+  },
+  "devDependencies": {
+    "bun-types": "^1.1.0"
+  }
+}

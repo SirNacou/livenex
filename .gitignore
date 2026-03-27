@@ -1,7 +1,7 @@
 # Dependencies
 node_modules/
 
-# Lock files — bun.lockb is committed for reproducible installs
+# Lock files — bun.lock is committed for reproducible installs
 # Other package managers' lock files are not tracked
 pnpm-lock.yaml
 package-lock.json

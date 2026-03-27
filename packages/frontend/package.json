@@ -17,7 +17,7 @@
     "tailwindcss": "^4.1.18",
     "lucide-react": "^0.545.0",
     "zod": "^3.23.8",
-    "@shared/types": "workspace:*"
+    "@livenex/shared": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.4",
