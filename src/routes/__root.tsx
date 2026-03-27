@@ -1,16 +1,7 @@
-import { RootRoute, Router } from "@tanstack/react-router";
-import { RootLayout } from "../layouts/root-layout.js";
+// Frontend React routes - Root layout with auth context
+import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { RootLayout } from '~/lib/root-layout'
 
-const rootRoute = new RootRoute({
+export const Route = createRootRoute({
   component: RootLayout,
-});
-
-export const routeTree = rootRoute.addChildren([]);
-
-export const router = new Router({ routeTree });
-
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
-}
+})

@@ -1,3 +1,4 @@
+// Health check routes
 import Elysia from "elysia";
 
 export const healthRouter = new Elysia({ prefix: "/health" })

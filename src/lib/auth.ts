@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { User, Session } from "@shared/types";
+import type { User, Session } from "~/types/api";
 
 /**
  * Auth context for providing user and session information

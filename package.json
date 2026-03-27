@@ -1,0 +1,49 @@
+{
+  "name": "@livenex/app",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Livenex - Single-user uptime monitoring and status pages",
+  "scripts": {
+    "dev": "start-react-app dev",
+    "build": "start-react-app build",
+    "preview": "start-react-app preview",
+    "type-check": "tsc --noEmit",
+    "migrate": "drizzle-kit push:pg",
+    "db:push": "drizzle-kit push:pg",
+    "db:generate": "drizzle-kit generate:pg",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@tanstack/react-start": "^1.45.0",
+    "@tanstack/react-router": "^1.66.0",
+    "@elysiajs/eden": "^1.1.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "elysia": "^1.1.20",
+    "better-auth": "^1.1.13",
+    "drizzle-orm": "^0.36.0",
+    "pg": "^8.13.1",
+    "@libsql/client": "^0.5.0",
+    "zod": "^3.23.8",
+    "uuid": "^9.0.0",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "tailwindcss": "^4.1.18",
+    "lucide-react": "^0.545.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.4",
+    "@tailwindcss/vite": "^4.1.18",
+    "typescript": "^5.7.2",
+    "vite": "^7.3.1",
+    "bun-types": "^1.1.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.12.2",
+    "@types/uuid": "^9.0.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/dom": "^10.4.1",
+    "jsdom": "^28.1.0",
+    "drizzle-kit": "^0.31.1"
+  }
+}

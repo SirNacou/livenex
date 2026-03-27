@@ -8,8 +8,7 @@ export const baseColumns = {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .defaultNow()
-    .notNull()
-    .$onUpdate(() => new Date()),
+    .notNull(),
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 };
 
@@ -18,7 +17,7 @@ export const users = pgTable(
   "users",
   {
     ...baseColumns,
-    id: uuid("id").primaryKey().default(() => `user_${createId()}`),
+    id: uuid("id").primaryKey().defaultRandom(),
     email: text("email").notNull().unique(),
     password: text("password"),
     name: text("name"),
@@ -56,7 +55,7 @@ export const apiKeys = pgTable(
   "api_keys",
   {
     ...baseColumns,
-    id: uuid("id").primaryKey().default(() => `key_${createId()}`),
+    id: uuid("id").primaryKey().defaultRandom(),
     userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),

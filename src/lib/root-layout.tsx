@@ -1,7 +1,7 @@
 import { Outlet } from "@tanstack/react-router";
-import { Header } from "../components/header.js";
-import { Navigation } from "../components/nav.js";
-import "../app.css";
+import { Header } from "~/components/header";
+import { Navigation } from "~/components/nav";
+import "~/app.css";
 
 /**
  * Root layout component

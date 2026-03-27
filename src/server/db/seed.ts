@@ -1,5 +1,5 @@
-import { db } from "../lib/db.js";
-import { users } from "./schema.js";
+import { db } from "~/lib/db";
+import { users } from "./schema";
 
 /**
  * Database seed script
