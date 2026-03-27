@@ -5,56 +5,58 @@
 See: .planning/PROJECT.md (updated 2026-03-26)
 
 **Core value:** Detect real outages reliably with zero missed incidents and near-zero false positives, while staying fast enough to configure and trust for everyday personal use.
-**Current focus:** Phase 1 - Private Access Foundation
+**Current focus:** Phase 1 - Private Access Foundation (context captured)
 
 ## Current Position
 
 Phase: 1 of 5 (Private Access Foundation)
+Context: Captured ✓
 Plan: 0 of TBD in current phase
 Status: Ready to plan
-Last activity: 2026-03-26 - Created initial roadmap, phase structure, and traceability mapping.
 
-Progress: [░░░░░░░░░░] 0%
+Last activity: 2026-03-27 - Captured Phase 1 context through discussion-phase workflow.
+
+Progress: [░░░░░░░░░░] 5% (context gathering complete for Phase 1)
+
+## Phase 1 Context Summary
+
+**Decisions locked:** 30 implementation decisions across:
+- Authentication Strategy (password-based primary + optional OIDC)
+- Session Management (30-day sessions, multiple independent devices)
+- API Key Scope and Permissions (scoped by groups/tags, configurable read/write)
+- API Key Management UI (clean list view, per-key operations, toast notifications)
+
+**Deferred to later phases:**
+- Two-factor authentication (2FA/MFA)
+- Password reset flow
+- Remote session management UI
+- Full API key audit logging
+- Bulk API key operations
 
 ## Performance Metrics
 
 **Velocity:**
 - Total plans completed: 0
-- Average duration: 0 min
+- Average duration: N/A
 - Total execution time: 0.0 hours
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| - | - | - | - |
-
-**Recent Trend:**
-- Last 5 plans: none
-- Trend: Stable
 
 ## Accumulated Context
 
 ### Decisions
+Locked in Phase 1 CONTEXT.md and DISCUSSION-LOG.md
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- Phase 1: Keep the dashboard private by default and treat API keys as the automation boundary.
-- Phase 3: Separate monitor-state truth from incident and notification handling.
-- Phase 5: Public status pages depend on trusted internal state and incident history, not raw checks.
-
-### Pending Todos
-
-None yet.
-
-### Blockers/Concerns
-
-- Notification channel implementation details may need narrowing during Phase 4 planning if provider complexity grows.
-- Uptime calculation rules for edits, maintenance, and `no_data` handling must stay explicit before Phase 5 execution.
+**Key principles:**
+- Single-user operation is non-negotiable
+- Private by default with opt-in public pages
+- OIDC flexibility for authentication backends
+- API keys as the primary automation interface
+- Secure session handling (httpOnly cookies, CORS disabled)
 
 ## Session Continuity
 
-Last session: 2026-03-26 22:40
-Stopped at: Roadmap and state files created; next action is planning Phase 1.
-Resume file: None
+Last session: 2026-03-27 15:23 UTC
+Stopped at: Phase 1 context captured; ready for planning phase
+Resume file: `.planning/phases/01-private-access-foundation/01-CONTEXT.md`
+
+---
+*State updated: 2026-03-27*
