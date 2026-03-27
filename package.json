@@ -4,9 +4,9 @@
   "type": "module",
   "description": "Livenex - Single-user uptime monitoring and status pages",
   "scripts": {
-    "dev": "start-react-app dev",
-    "build": "start-react-app build",
-    "preview": "start-react-app preview",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "migrate": "drizzle-kit push:pg",
     "db:push": "drizzle-kit push:pg",
