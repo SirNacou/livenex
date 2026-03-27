@@ -1,56 +1,20 @@
 version: '3.8'
 
 services:
-  # Caddy reverse proxy
-  caddy:
-    image: caddy:2.7-alpine
-    container_name: livenex-caddy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    networks:
-      - livenex-network
-    depends_on:
-      - frontend
-      - backend
-
-  # Frontend (TanStack Start)
-  frontend:
+  # Unified Livenex Application (TanStack Start + ElysiaJS)
+  app:
     build:
       context: .
-      dockerfile: docker/Dockerfile.frontend
-    container_name: livenex-frontend
+      dockerfile: docker/Dockerfile
+    container_name: livenex-app
     environment:
       - NODE_ENV=development
       - PORT=3000
-    ports:
-      - "3000:3000"
-    networks:
-      - livenex-network
-    depends_on:
-      - backend
-    volumes:
-      - ./packages/frontend/src:/app/packages/frontend/src
-    command: bun run dev --workspace=@livenex/frontend
-
-  # Backend (ElysiaJS)
-  backend:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.backend
-    container_name: livenex-backend
-    environment:
-      - NODE_ENV=development
-      - PORT=3001
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/livenex
       - REDIS_URL=redis://redis:6379
       - BETTER_AUTH_SECRET=local-dev-secret
     ports:
-      - "3001:3001"
+      - "3000:3000"
     networks:
       - livenex-network
     depends_on:
@@ -59,8 +23,8 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - ./packages/backend/src:/app/packages/backend/src
-    command: bun run dev --workspace=@livenex/backend
+      - ./src:/app/src
+    command: bun run dev
 
   # PostgreSQL database
   postgres:
