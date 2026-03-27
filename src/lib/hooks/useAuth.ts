@@ -17,14 +17,20 @@ export function useAuth() {
 	useEffect(() => {
 		const loadSession = async () => {
 			try {
-				const res = await fetch("/api/auth/session");
+				const res = await fetch("/api/auth/session", {
+					credentials: "include",
+				});
 				if (!res.ok) {
 					setSession(null);
 					return;
 				}
 				const data = await res.json();
+				// better-auth returns { session: ..., user: ... } for session endpoint
 				if (data.user) {
 					setSession(data.user);
+				} else if (data.session) {
+					// Fallback if structure is different
+					setSession(null);
 				}
 			} catch (err) {
 				console.error("Failed to load session", err);
