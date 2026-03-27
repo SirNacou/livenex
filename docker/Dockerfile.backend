@@ -1,24 +1,24 @@
 # Backend (ElysiaJS) build and runtime
 # Optimized for Bun runtime
 
-FROM node:20-alpine AS builder
+FROM oven/bun:latest AS builder
 
 WORKDIR /app
 
 # Copy monorepo files
-COPY package.json package-lock.json ./
+COPY package.json ./
 COPY packages/backend ./packages/backend
 COPY packages/shared ./packages/shared
 COPY tsconfig.json drizzle.config.ts ./
 
 # Install dependencies
-RUN npm ci
+RUN bun install
 
 # Build backend
-RUN npm run build --workspace=@livenex/backend
+RUN bun run build --workspace=@livenex/backend
 
 # Runtime stage
-FROM node:20-alpine
+FROM oven/bun:latest
 
 WORKDIR /app
 
@@ -28,10 +28,10 @@ COPY --from=builder /app/packages/backend/package.json ./
 COPY --from=builder /app/packages/backend/src/db/migrations ./src/db/migrations
 
 # Install production dependencies only
-RUN npm ci --omit=dev
+RUN bun install --frozen-lockfile --production
 
 # Expose port (internal, mapped by docker-compose)
 EXPOSE 3001
 
 # Start backend
-CMD ["npm", "run", "preview"]
+CMD ["bun", "run", "preview"]

@@ -35,7 +35,7 @@ services:
       - backend
     volumes:
       - ./packages/frontend/src:/app/packages/frontend/src
-    command: npm run dev --workspace=@livenex/frontend
+    command: bun run dev --workspace=@livenex/frontend
 
   # Backend (ElysiaJS)
   backend:
@@ -60,7 +60,7 @@ services:
         condition: service_healthy
     volumes:
       - ./packages/backend/src:/app/packages/backend/src
-    command: npm run dev --workspace=@livenex/backend
+    command: bun run dev --workspace=@livenex/backend
 
   # PostgreSQL database
   postgres:

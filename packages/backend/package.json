@@ -5,14 +5,15 @@
   "description": "Livenex ElysiaJS API backend",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx watch src/app.ts",
-    "build": "tsc",
-    "preview": "node dist/app.js",
-    "test": "vitest run",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:generate": "drizzle-kit generate",
-    "db:studio": "drizzle-kit studio"
+    "dev": "bun run --hot src/app.ts",
+    "build": "bun build ./src/app.ts --outdir dist --minify",
+    "preview": "bun dist/app.js",
+    "start": "bun start --hot src/app.ts",
+    "test": "bun test",
+    "db:migrate": "bun drizzle-kit migrate",
+    "db:push": "bun drizzle-kit push",
+    "db:generate": "bun drizzle-kit generate",
+    "db:studio": "bun drizzle-kit studio"
   },
   "dependencies": {
     "elysia": "^1.1.20",
@@ -27,8 +28,7 @@
   },
   "devDependencies": {
     "typescript": "^5.7.2",
-    "tsx": "^4.19.1",
-    "vitest": "^3.0.5",
+    "bun-types": "^1.1.0",
     "@types/node": "^22.10.2",
     "@types/pg": "^8.12.2",
     "@types/uuid": "^10.0.1",
