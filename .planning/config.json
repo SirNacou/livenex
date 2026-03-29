@@ -1,5 +1,5 @@
 {
-  "model_profile": "balanced",
+  "model_profile": "budget",
   "commit_docs": true,
   "parallelization": true,
   "search_gitignored": false,
@@ -31,6 +31,6 @@
     "context_warnings": true
   },
   "resolve_model_ids": "omit",
-  "mode": "yolo",
-  "granularity": "standard"
+  "mode": "interactive",
+  "granularity": "fine"
 }
