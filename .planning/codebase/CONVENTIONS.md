@@ -5,209 +5,136 @@
 ## Naming Patterns
 
 **Files:**
-- React components: PascalCase (`Button`, `Toaster`, `Providers`)
-- Route files: Use TanStack router naming with `$` for dynamic segments (`$authView.tsx`, `$accountView.tsx`)
-- Utility modules: camelCase (`utils.ts`, `auth-client.ts`)
-- Database/Config: camelCase (`schema.ts`, `index.ts`)
-- Layout/Root: Underscore prefix for special routes (`__root.tsx`)
-- API routes: Dynamic dollar prefix (`$.ts` for catch-all)
+- Component files: PascalCase (e.g., `Button.tsx`, `Toaster.tsx`)
+- Utility/helper files: camelCase (e.g., `auth-client.ts`, `get-treaty.ts`)
+- Config files: camelCase or kebab-case (e.g., `drizzle.config.ts`, `vite.config.ts`)
+- Route files: Dollar-prefix pattern for dynamic routes (e.g., `$authView.tsx`, `$accountView.tsx`)
+- Index files: `index.ts` for exporting modules
 
 **Functions:**
-- camelCase for all functions: `cn()`, `getRouter()`, `getContext()`
-- Component functions: PascalCase (`App`, `RootDocument`, `RouteComponent`)
-- Exported functions: camelCase for utilities, PascalCase for React components
-- Factory/getter functions: Prefix with `get` (`getRouter()`, `getContext()`)
+- Component functions: PascalCase (e.g., `Button`, `Toaster`, `RootDocument`, `RouteComponent`)
+- Utility functions: camelCase (e.g., `cn`, `getRouter`, `getTreaty`, `getContext`)
+- Handler functions: camelCase with descriptive names (e.g., `handle`)
+- Arrow functions preferred for inline handlers: `const handle = ({ request }: { request: Request }) => app.fetch(request)`
 
 **Variables:**
-- camelCase: `queryClient`, `authClient`, `context`, `router`
-- Constants exported: camelCase (`auth`, `db`, `authClient`)
-- Theme constants: SCREAMING_SNAKE_CASE (`THEME_INIT_SCRIPT`)
+- Constants: camelCase or SCREAMING_SNAKE_CASE for initialization scripts (e.g., `THEME_INIT_SCRIPT`)
+- State variables: camelCase (e.g., `data`, `message`, `stored`, `mode`)
+- Objects/configs: camelCase (e.g., `buttonVariants`, `authClient`)
+- Destructured props: camelCase
 
 **Types:**
-- Interfaces: PascalCase (`MyRouterContext`, `ToasterProps`)
-- Props types: `ComponentNameProps` pattern or inline `interface` with file-scoped definitions
-- Generic types: Imported from libraries with `type` keyword (`type VariantProps`, `type ReactNode`, `type ClassValue`)
+- Interfaces: PascalCase (e.g., `MyRouterContext`, `ToasterProps`)
+- Type aliases: PascalCase (e.g., `ClassValue`, `VariantProps`)
+- Imported type keyword: Use `type` prefix for imports (e.g., `import type { QueryClient }`)
+- Props types: Inline with component or `PropsName` suffix (e.g., `ButtonPrimitive.Props`)
 
 ## Code Style
 
 **Formatting:**
-- Formatter: Biome 2.4.5
-- Indentation: Tabs (configured in `biome.json`)
-- Quote style: Double quotes for JavaScript (enforced by Biome)
-- Semicolons: Required (Biome default)
+- Tool: Biome 2.4.5
+- Indent style: Tabs
+- Quote style: Double quotes
+- Enabled formatter: true
+- Organized imports enabled
 
 **Linting:**
-- Linter: Biome 2.4.5
-- Configuration: `biome.json` with recommended rules enabled
-- Organization: Auto-import organization enabled (`biome assist`)
-- Files scanned: `src/**/*`, `.vscode/**/*`, `index.html`, `vite.config.ts`
-- Exclusions: Generated files (`routeTree.gen.ts`), styles (`styles.css`)
+- Tool: Biome (built-in)
+- Rules: Recommended rules enabled
+- Configuration: `biome.json`
+- Security rules enforced: e.g., `noDangerouslySetInnerHtml` (with biome-ignore override when necessary)
 
-**Line Length:**
-- No explicit limit observed in conventions; follows standard long lines as needed
+**File Organization:**
+```
+src/
+├── components/        # React components
+├── ui/               # UI components (shadcn pattern)
+├── db/               # Database configuration and schema
+├── lib/              # Utilities and helpers
+├── integrations/     # Third-party integration wrappers
+├── routes/           # File-based routing (TanStack Router)
+├── server/           # Server-side functions
+├── index.ts          # Elysia app entry point
+├── env.ts            # Environment variables
+├── providers.tsx     # Root provider component
+└── router.tsx        # Router configuration
+```
 
 ## Import Organization
 
 **Order:**
-1. External third-party libraries (`react`, `@tanstack/*`, etc.)
-2. Project imports using path aliases (`#/*` or `@/*`)
-3. Type imports: Always use `type` keyword for type-only imports
+1. External framework imports (React, Elysia, TanStack)
+2. Third-party library imports (class-variance-authority, zod, etc.)
+3. Relative imports with path aliases (`#/` or `@/`)
+4. Type imports use `import type` syntax
 
 **Path Aliases:**
-- Primary: `#/*` maps to `./src/*` (defined in `tsconfig.json` and `package.json`)
-- Alternative: `@/*` maps to `./src/*` (available in `tsconfig.json`)
-- Standard: Mix of both; `#/` appears more frequently in code
+- `#/*` maps to `./src/*` (primary alias, used throughout codebase)
+- `@/*` maps to `./src/*` (secondary alias, also available)
 
-**Import Examples:**
+**Example:**
 ```typescript
-// External first
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-import type { ReactNode } from 'react'
-
-// Then project imports
-import { cn } from "#/lib/utils"
-import { db } from "#/db"
-import { Button } from "#/components/ui/button"
-
-// Type imports with type keyword
-import type { QueryClient } from "@tanstack/react-query"
+import { Toaster } from "#/components/ui/sonner";
+import { Providers } from "#/providers";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import type { QueryClient } from "@tanstack/react-query";
 ```
 
 ## Error Handling
 
 **Patterns:**
-- Inline try-catch in JavaScript/browser context (see `THEME_INIT_SCRIPT` in `src/routes/__root.tsx:18`)
-- No explicit error handling in component code; errors bubble to provider level
-- Better-auth handles auth errors automatically
-- Tanstack Query handles async error states through query hooks
-- Database errors: Handled by Drizzle ORM + Better-auth integration
+- No explicit try-catch blocks in most route components
+- Error handling delegated to framework and library defaults
+- Inline error handling: Inline script uses `try-catch` with silent fallback (e.g., `catch(e){}` in THEME_INIT_SCRIPT)
+- Errors from async operations handled by TanStack Router loaders implicitly
+- API errors handled by client library (`eden` from Elysia)
 
-**Observed approach:**
-- Silent failure with fallback behavior in client-side code (e.g., theme init script)
-- Framework-provided error boundaries (Tanstack Router)
-- No custom error classes or centralized error handling visible
+**Example:**
+```typescript
+// Route loader with implicit error handling
+loader: async () => {
+  const r = await getTreaty().get()
+  return r.data
+}
+```
 
 ## Logging
 
-**Framework:** Not used - no logging library detected
-
-**Patterns:**
-- No explicit console logging in application code
-- Devtools provide debugging: TanStack DevTools, React Devtools, Router Devtools
-- Log sink: Tanstack Query Devtools integration
-
-**Recommendation for adding logs:**
-- Use Sonner toast notifications for user-facing messages (`src/components/ui/sonner.tsx`)
-- Use devtools for development debugging
-- Avoid console logging in production code
+**Framework:** No explicit logging library configured
+- Console logging not used in codebase (not required for current patterns)
+- Errors logged implicitly by framework and libraries
+- Development debugging: Use TanStack Devtools components enabled in root layout
 
 ## Comments
 
 **When to Comment:**
-- JSDoc blocks for complex configuration: observed in `src/env.ts` with block comments explaining Zod validation behavior
-- Biome ignore directives: `{/** biome-ignore lint/... */}` for exceptions to linting rules (seen in `src/routes/__root.tsx:48`)
-- Documentation blocks for setup/configuration in utility files
+- JSDoc comments for complex public APIs: `/** ... */` syntax used in `env.ts` for configuration documentation
+- Biome-ignore directives for security overrides: `{/** biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}`
+- Auto-generated files marked as non-editable: `routeTree.gen.ts` has explicit "do not modify" comments
+- Minimal inline comments; code should be self-documenting
 
 **JSDoc/TSDoc:**
-- Used sparingly for explanation blocks (seen in `src/env.ts` lines 9-38)
-- Not used for function documentation in general code
-- Pattern: Block comments for complex logic explanation, not inline annotations
+- Used for environment variable descriptions and configuration notes
+- Multi-line comments document WHY decisions were made
+- Single-line comments rare; code readability preferred
 
 ## Function Design
 
 **Size:** 
-- Small focused functions (6-11 lines typical for route components)
-- Larger files when they contain variant definitions (Button component: 58 lines)
+- Small, focused functions preferred
+- Most route components: 10-30 lines
+- Utility functions: Single responsibility (e.g., `cn` = class merging only)
 
 **Parameters:**
-- Destructured props: `{ children }`, `{ ...props }`
-- Type annotations required for all parameters in TypeScript files
-- Props patterns: Inline interface or spread existing component props
+- Destructured props for component functions
+- Named parameters with type annotations: `const handle = ({ request }: { request: Request })`
+- Rest spread operators for passthrough props: `{ ...props }` for UI components
 
 **Return Values:**
-- React components return JSX.Element
-- Utilities return specific types (`string`, `QueryClient`, etc.)
-- Export constants with explicit types: `export const auth = betterAuth({...})`
-
-**Example patterns:**
-```typescript
-// Simple utility with clear types
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-
-// Component with destructured props
-function Button({
-  className,
-  variant = "default",
-  size = "default",
-  ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
-  return <ButtonPrimitive {...props} />
-}
-
-// Route component pattern
-function RouteComponent() {
-  const { authView } = Route.useParams()
-  return (
-    <main className="...">
-      <AuthView pathname={authView} />
-    </main>
-  )
-}
-```
-
-## Module Design
-
-**Exports:**
-- Named exports for utilities: `export function cn(...)`, `export const auth = ...`
-- Default exports for integrations and providers: `export default TanStackQueryProvider`
-- Mixed pattern: Some files export both (`src/components/ui/button.tsx` exports both function and variant const)
-
-**Barrel Files:**
-- Not observed in current codebase
-- Components are imported directly from their files
-
-**Pattern Example:**
-```typescript
-// Utility module export
-export function cn(...inputs: ClassValue[]) { ... }
-
-// Configuration module export
-export const auth = betterAuth({...})
-
-// Component export
-export { Button, buttonVariants }
-
-// Provider default export
-export default function TanStackQueryProvider({...}) { ... }
-```
-
-## TypeScript Configuration
-
-**Strict Mode:** Enabled
-- `strict: true` in `tsconfig.json`
-- `noUnusedLocals: true` - Unused variables not allowed
-- `noUnusedParameters: true` - Unused parameters not allowed
-- `noFallthroughCasesInSwitch: true` - Switch fallthrough prevented
-- `noUncheckedSideEffectImports: true` - Explicit side effect imports required
-
-**Module Resolution:** Bundler mode with path aliases
-
-**JSX:** React 17+ automatic JSX transform enabled
-
-## Component Patterns
-
-**Styled Components:**
-- Tailwind CSS for styling (via `@tailwindcss/vite` plugin)
-- Class variance authority for component variants
-- `cn()` utility for merging classes: `cn(buttonVariants({ variant, size, className }))`
-
-**Props Pattern:**
-- Spread syntax with defaults: `{ variant = "default", size = "default", ...props }`
-- Type composition: Combining component props with variant types
-- Forwarding: Full spread forwarding to underlying components
+- Implicit returns in arrow functions
+- JSX components return React.ReactNode
+- Utility functions return typed values
+- Async functions return Promises with generic type
 
 **Example:**
 ```typescript
@@ -225,6 +152,62 @@ function Button({
   )
 }
 ```
+
+## Module Design
+
+**Exports:**
+- Named exports preferred: `export const`, `export function`
+- Default exports used for route components created with `createFileRoute`
+- Barrel exports from index files: `export { Button, buttonVariants }`
+- Type-only exports: `export { type AppType }` with `type` keyword
+
+**Barrel Files:**
+- Index files re-export from component folders
+- Example: `components/ui/button.tsx` exports both `Button` component and `buttonVariants` utility
+
+**Patterns:**
+- Config objects centralized: `env.ts`, `router.tsx`, `providers.tsx`
+- Route configuration: `export const Route = createFileRoute(...)`
+- Integration wrappers: Abstract external library setup in `integrations/` folder
+- Server functions: Wrapped with `createIsomorphicFn()` for dual server/client execution
+
+## TypeScript Configuration
+
+**Strict Mode:** Enabled
+- `strict: true`
+- `noUnusedLocals: true`
+- `noUnusedParameters: true`
+- `noFallthroughCasesInSwitch: true`
+- `noUncheckedSideEffectImports: true`
+
+**Module System:**
+- Module: ESNext
+- Module resolution: bundler
+- Allows importing .ts/.tsx extensions: `allowImportingTsExtensions: true`
+- Verbatim module syntax: `verbatimModuleSyntax: true`
+
+## Architectural Principles
+
+**Composition Over Inheritance:**
+- React functional components with hooks
+- Wrapper pattern for library components (e.g., Button wraps ButtonPrimitive)
+- Provider pattern for context setup: `Providers.tsx` wraps multiple providers
+
+**Separation of Concerns:**
+- Utilities isolated in `lib/` (e.g., `utils.ts`, `auth.ts`)
+- Database logic in `db/`
+- Route-specific logic in `routes/`
+- Integrations abstracted in `integrations/`
+
+**Single Responsibility:**
+- Each file has one primary export
+- Components focus on rendering
+- Utilities focus on data transformation
+- Config files focus on setup
+
+**Immutability:**
+- Const declarations preferred over let
+- Functional paradigm for state management (TanStack Query for server state)
 
 ---
 

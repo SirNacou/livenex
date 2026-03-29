@@ -6,221 +6,214 @@
 
 ```
 livenex/
-├── src/                        # Application source code
-│   ├── components/             # Reusable UI components
-│   │   └── ui/                 # Primitive UI components
-│   ├── db/                     # Database configuration and schema
-│   ├── integrations/           # Third-party library integrations
-│   │   └── tanstack-query/     # TanStack Query provider setup
-│   ├── lib/                    # Shared utilities and configurations
-│   ├── routes/                 # File-based route definitions
-│   │   ├── api/                # Server-side API routes
-│   │   │   └── auth/           # Authentication endpoints
-│   │   ├── auth/               # Authentication pages
-│   │   ├── account/            # User account pages
-│   │   └── __root.tsx          # Root layout (wraps all routes)
-│   ├── env.ts                  # Environment variable validation
-│   ├── providers.tsx           # Root context providers
-│   ├── router.tsx              # TanStack Router initialization
-│   ├── routeTree.gen.ts        # Generated route tree (auto-generated)
-│   └── styles.css              # Global styles
-├── public/                     # Static assets
-├── .planning/                  # Planning and analysis documents
-├── package.json                # Project dependencies
-├── vite.config.ts              # Vite build configuration
-├── tsconfig.json               # TypeScript configuration
-├── drizzle.config.ts           # Database migrations config
-├── biome.json                  # Code formatting/linting rules
-└── .env                        # Environment variables (secrets, not committed)
+├── src/                          # Application source code
+│   ├── routes/                   # TanStack Router file-based routes
+│   │   ├── __root.tsx           # Root layout and HTML document
+│   │   ├── index.tsx            # Home page
+│   │   ├── api/                 # API route handlers
+│   │   │   ├── $.ts             # Catch-all API handler (delegates to Elysia)
+│   │   │   └── auth/            # Authentication endpoints
+│   │   │       └── $.ts         # Auth handler
+│   │   ├── auth/                # Authentication UI routes
+│   │   │   └── $authView.tsx    # Dynamic auth views (sign-in, sign-up, etc.)
+│   │   └── account/             # Account management routes
+│   │       └── $accountView.tsx # Dynamic account views (profile, settings, etc.)
+│   ├── components/              # Reusable React components
+│   │   └── ui/                  # Base UI components
+│   │       ├── button.tsx       # Button component with variants
+│   │       └── sonner.tsx       # Toast notification component wrapper
+│   ├── integrations/            # Third-party library integrations
+│   │   └── tanstack-query/      # React Query integration
+│   │       ├── root-provider.tsx # QueryClient provider setup
+│   │       └── devtools.tsx     # React Query devtools panel
+│   ├── lib/                     # Shared utilities and clients
+│   │   ├── auth-client.ts       # Client-side auth client instance
+│   │   ├── auth.ts              # Server-side Better Auth configuration
+│   │   └── utils.ts             # Utility functions (cn, etc.)
+│   ├── db/                      # Database layer
+│   │   ├── index.ts             # Drizzle ORM instance
+│   │   └── schema.ts            # Database schema definitions (empty)
+│   ├── server/                  # Server-side utilities
+│   │   └── get-treaty.ts        # Isomorphic API client wrapper
+│   ├── providers.tsx            # Global context providers wrapper
+│   ├── router.tsx               # TanStack Router configuration
+│   ├── env.ts                   # Environment variable validation (t3-oss/env-core)
+│   ├── routeTree.gen.ts         # Auto-generated route tree (do not edit)
+│   ├── index.ts                 # Server API entry point (Elysia app)
+│   └── styles.css               # Global styles
+├── public/                       # Static assets
+├── .planning/                    # GSD planning documents
+│   └── codebase/                # Architecture documentation
+├── .vscode/                     # VS Code workspace settings
+├── .tanstack/                   # TanStack-related config
+├── biome.json                   # Biome linter/formatter config
+├── drizzle.config.ts            # Drizzle ORM configuration
+├── vite.config.ts               # Vite build configuration
+├── tsconfig.json                # TypeScript compiler configuration
+├── package.json                 # Dependencies and scripts
+├── bun.lock                      # Lock file (Bun package manager)
+└── README.md                     # Project documentation
 ```
 
 ## Directory Purposes
 
-**src/components/ui/:**
-- Purpose: Reusable UI primitives (buttons, toasts, modals, etc.)
-- Contains: Styled React components using Base UI and Tailwind CSS
-- Key files: `src/components/ui/button.tsx`, `src/components/ui/sonner.tsx`
-- Pattern: Each component exports the component and variant schema (if using CVA)
+**`src/routes/`:**
+- Purpose: File-based routing system - each file/folder structure maps to URL routes
+- Contains: Route components (TSX), route loaders, server-side route handlers
+- Key files: `__root.tsx` (layout), `index.tsx` (home), dynamic routes with `$` prefix
+- Pattern: File names become URL paths - `auth/$authView.tsx` creates `/auth/:authView` route
 
-**src/db/:**
-- Purpose: Database access layer and schema definitions
-- Contains: Drizzle ORM instance, table schemas
-- Key files: `src/db/index.ts` (connection), `src/db/schema.ts` (schema definitions)
-- Pattern: Drizzle instance exported from index.ts for use throughout app
+**`src/components/`:**
+- Purpose: Reusable React components
+- Contains: UI components, layout components, feature-specific components
+- Key files: `ui/` subdirectory contains base components (Button, Sonner)
+- Pattern: Atomic design - start with small UI pieces in `ui/`, build feature components above
 
-**src/integrations/tanstack-query/:**
-- Purpose: Provider setup for TanStack Query (React Query)
-- Contains: QueryClient initialization, context wrapper component
-- Key files: `src/integrations/tanstack-query/root-provider.tsx` (provider), `devtools.tsx` (devtools plugin)
-- Pattern: getContext() function ensures singleton QueryClient across SSR and client
+**`src/integrations/`:**
+- Purpose: Third-party library integrations and setup
+- Contains: Provider configurations, wrapper components, initialization code
+- Key files: `tanstack-query/` - React Query setup
+- Pattern: Each integration has isolated setup to avoid polluting main codebase
 
-**src/lib/:**
-- Purpose: Shared utilities and core configurations
-- Contains: Auth system setup, utility functions, type definitions
-- Key files: `src/lib/auth.ts` (server auth), `src/lib/auth-client.ts` (client auth), `src/lib/utils.ts` (helpers)
-- Pattern: Utilities used by routes and components, auth used by API handlers
+**`src/lib/`:**
+- Purpose: Shared utilities, clients, and configurations
+- Contains: Authentication client, API client wrappers, utility functions
+- Key files: `auth-client.ts` (client), `auth.ts` (server), `utils.ts` (helpers)
+- Pattern: Non-component, non-route logic lives here
 
-**src/routes/:**
-- Purpose: File-based route definitions matching URL structure
-- Contains: Page components, server handlers, API endpoints
-- Pattern: Directory structure mirrors URL paths (e.g., src/routes/auth/$authView.tsx → /auth/:authView)
-- Route files export `Route` constant created with `createFileRoute()` or `createRootRouteWithContext()`
+**`src/db/`:**
+- Purpose: Database access layer
+- Contains: Drizzle ORM instance, database schema
+- Key files: `index.ts` (export db instance), `schema.ts` (table definitions)
+- Pattern: Database client exported and used server-side only
 
-**src/routes/__root.tsx:**
-- Purpose: Root layout component wrapping all pages
-- Contains: HTML structure, meta tags, providers, devtools
-- Key responsibility: Render `<Providers>{children}</Providers>` for all routes
-- Theme initialization script included to prevent flash on load
+**`src/server/`:**
+- Purpose: Server-only utilities and API helpers
+- Contains: Server-side functions, API wrappers
+- Key files: `get-treaty.ts` (isomorphic API client)
+- Pattern: Code here can be imported in routes but only executes on server
 
-**src/routes/api/auth/$.ts:**
-- Purpose: Authentication API endpoint handler
-- Contains: Server-side auth request processing
-- Pattern: Catch-all route ($ prefix) handles all `/api/auth/*` requests
-- Delegates to Better Auth handler: `auth.handler(request)`
+**`src/providers.tsx`:**
+- Purpose: Global context provider composition
+- Contains: TanStack Query provider, authentication UI provider, nested providers
+- Pattern: Single file that wraps all providers - imported in root layout
 
-**src/routes/auth/ and src/routes/account/:**
-- Purpose: Authentication and account management pages
-- Files: `$authView.tsx` (sign-in, sign-up, etc.), `$accountView.tsx` (profile, settings, etc.)
-- Contains: Page components rendering AuthView and AccountView from better-auth-ui library
-- Pattern: Dynamic segment prefix ($) accepts URL parameters (e.g., authView, accountView)
+**`src/router.tsx`:**
+- Purpose: TanStack Router configuration and context setup
+- Contains: Router creation, context definition
+- Pattern: Creates router instance with route tree and context
 
-**src/providers.tsx:**
-- Purpose: Compose all context providers needed by application
-- Contains: TanStack Query provider, Auth UI provider, router navigation setup
-- Pattern: Exported component wraps children with nested providers
-- Called from root route to wrap entire application
+**`src/env.ts`:**
+- Purpose: Environment variable validation
+- Contains: Schema definitions for server and client env vars
+- Pattern: t3-oss/env-core validates at startup, prevents runtime errors
 
-**src/router.tsx:**
-- Purpose: TanStack Router instance creation and configuration
-- Contains: getRouter() factory function that creates and configures router
-- Exports: getRouter function and Router type registration
-- Pattern: Called during app initialization to create router with context
-
-**src/env.ts:**
-- Purpose: Environment variable validation and typing
-- Contains: Zod schema for server and client (VITE_) env vars
-- Pattern: createEnv() from @t3-oss/env-core ensures type-safe env access
-- Validated at runtime with emptyStringAsUndefined: true for safety
+**`src/index.ts`:**
+- Purpose: Server API entry point
+- Contains: Elysia app instance with base routes
+- Pattern: Exported as AppType for client type safety
 
 ## Key File Locations
 
 **Entry Points:**
-- `src/routes/__root.tsx`: Application root layout and HTML shell
-- `src/router.tsx`: Router configuration and initialization
-- `src/providers.tsx`: Context provider composition
-- `src/routes/index.tsx`: Home page (/)
+- `src/index.ts`: Server API entry point (Elysia app)
+- `src/routes/__root.tsx`: Client entry point (root layout and HTML)
+- `src/router.tsx`: Router initialization
+- `vite.config.ts`: Build configuration
 
 **Configuration:**
-- `vite.config.ts`: Build tool setup (Vite, TanStack Start, Tailwind, Nitro)
-- `tsconfig.json`: TypeScript compiler options and path aliases
+- `src/env.ts`: Environment variable validation
+- `src/lib/auth.ts`: Authentication server setup
+- `src/integrations/tanstack-query/root-provider.tsx`: Query client setup
 - `drizzle.config.ts`: Database migration configuration
-- `biome.json`: Code formatting and linting rules
-- `package.json`: Dependencies and build scripts
 
 **Core Logic:**
-- `src/lib/auth.ts`: Server-side authentication system (Better Auth)
-- `src/lib/auth-client.ts`: Client-side authentication client
-- `src/db/index.ts`: Database connection (Drizzle ORM)
-- `src/lib/utils.ts`: Shared utility functions (cn for class merging)
+- `src/lib/auth-client.ts`: Client-side authentication
+- `src/server/get-treaty.ts`: API communication layer
+- `src/db/index.ts`: Database connection
 
-**State Management:**
-- `src/integrations/tanstack-query/root-provider.tsx`: Query client setup
-- `src/providers.tsx`: Provider composition
-
-**UI Components:**
-- `src/components/ui/button.tsx`: Button component with variants
-- `src/components/ui/sonner.tsx`: Toast notification component
-- `src/routes/auth/$authView.tsx`: Authentication pages (sign-in, sign-up, etc.)
-- `src/routes/account/$accountView.tsx`: Account management pages
-
-**Route Handlers:**
-- `src/routes/api/auth/$.ts`: Authentication API endpoint (POST/GET)
+**Testing:**
+- No test files detected in src/ directory
+- `vitest` configured but no test suite present
 
 ## Naming Conventions
 
 **Files:**
-- **Route files:** Lowercase with `$` for dynamic segments (e.g., `$authView.tsx`, `$accountView.tsx`)
-- **Component files:** PascalCase (e.g., `Button.tsx`, `AuthView`)
-- **API routes:** Kebab-case with `$` for catch-all (e.g., `$.ts`)
-- **Config files:** Lowercase with `.config` extension or conventional names (e.g., `vite.config.ts`, `drizzle.config.ts`)
+- Route files: PascalCase for route segments (e.g., `__root.tsx`)
+- Dynamic segments: `$paramName.tsx` (e.g., `$authView.tsx`)
+- Component files: `PascalCase.tsx` (e.g., `Button.tsx`)
+- Utilities/configs: `camelCase.ts` (e.g., `utils.ts`, `auth-client.ts`)
+- Index files: `index.ts` for directory exports
 
 **Directories:**
-- **Feature/domain directories:** Lowercase plural (e.g., `routes`, `components`, `integrations`)
-- **Nested routes:** Mirror URL structure in lowercase (e.g., `routes/auth/`, `routes/api/auth/`)
-- **Grouped components:** Grouped by type (e.g., `components/ui/`)
+- Feature directories: `lowercase` (e.g., `routes/`, `components/`, `lib/`)
+- UI components: `ui/` subdirectory under components
+- Integrations: `integrations/` with descriptive subdirectories
 
-**Exports:**
-- **Route definitions:** Always export `const Route = createFileRoute(...)`
-- **Components:** Named exports for components and helper functions
-- **Utils:** Named exports for utility functions
-- **Singleton instances:** Default exports for providers and context creators
+**Types/Interfaces:**
+- Interface names: PascalCase, often prefixed with their context
+- Generic context types: `MyRouterContext` (see `__root.tsx`)
 
 ## Where to Add New Code
 
-**New Feature (e.g., dashboard, blog):**
-- Route directory: Create `src/routes/feature-name/` matching URL path structure
-- Primary code: Route components in `src/routes/feature-name/*.tsx`
-- Shared logic: Extract to `src/lib/feature-name.ts` if reusable
-- Components: Add UI components to `src/components/` if shared, or inline in route if feature-specific
-- Server logic: Add server handlers in API routes `src/routes/api/feature-name/*.ts`
+**New Feature:**
+- Primary code: `src/routes/` (create new route file or folder)
+- Components: `src/components/` (if component-based features)
+- Server logic: `src/server/` or `src/lib/` depending on scope
+- Tests: Create `.test.ts` or `.spec.ts` next to source file
 
-**New API Endpoint:**
-- Location: `src/routes/api/feature/endpoint.ts`
-- Pattern: Use `createFileRoute('/api/feature/endpoint')` with `server: { handlers: { GET, POST } }`
-- Handlers receive `{ request }` and can access auth, database, etc.
-- Example path: `/api/users/list.ts` → POST/GET `/api/users/list`
+**New Component/Module:**
+- UI component: `src/components/ui/` (for reusable base components)
+- Feature component: `src/components/` (for feature-specific components)
+- Logic: `src/lib/` (for utilities), `src/server/` (for server code)
+- Integration: `src/integrations/` (if wrapping third-party library)
 
-**New Reusable Component:**
-- Location: `src/components/ui/` for primitives, `src/components/` for domain-specific
-- Pattern: Export component and variant schema (if using CVA from class-variance-authority)
-- Example: Create `src/components/ui/card.tsx` for a new Card component
+**Utilities:**
+- General utilities: `src/lib/utils.ts`
+- Domain-specific utilities: Create file in `src/lib/` (e.g., `src/lib/date-utils.ts`)
+- Server utilities: `src/server/` directory
+- Client utilities: `src/lib/` or `src/utils/` (as project grows)
 
-**New Context/Provider:**
-- Location: `src/integrations/` for library integrations, or `src/lib/` for app-specific
-- Pattern: Create provider component and export from index, use in `src/providers.tsx`
-- Example: Create `src/integrations/my-feature/provider.tsx` and import in providers.tsx
-
-**New Utility/Helper:**
-- Location: `src/lib/` for general utilities, or domain-specific file (e.g., `src/lib/auth.ts`)
-- Pattern: Named exports for individual functions
-- Example: Add function to `src/lib/utils.ts` or create `src/lib/formatting.ts`
-
-**New Database Table:**
-- Location: `src/db/schema.ts`
-- Pattern: Define table with Drizzle ORM, run `npm run db:push` to apply migration
-- Tables auto-used by Better Auth for session management
+**API Routes:**
+- Public API: `src/routes/api/` with catch-all `$.ts` handler
+- Auth endpoints: Handled by `src/routes/api/auth/$.ts`
+- New endpoints: Add to Elysia app in `src/index.ts` or create new route handler
 
 ## Special Directories
 
-**src/routes/ (File-Based Routing):**
-- Purpose: Define application routes via file structure
-- Generated: `routeTree.gen.ts` is auto-generated by TanStack Router plugin
-- Committed: Yes (route files committed, routeTree.gen.ts also committed)
-- Pattern: TanStack Router watches this directory and generates route tree automatically
-- File naming rules:
-  - `index.tsx` = route at directory level (e.g., `routes/index.tsx` → /)
-  - `$param.tsx` = dynamic segment (e.g., `routes/auth/$authView.tsx` → /auth/:authView)
-  - `$.ts` = catch-all segment (e.g., `routes/api/auth/$.ts` → /api/auth/*)
+**`src/routes/`:**
+- Purpose: File-based routing
+- Generated: Partially - `routeTree.gen.ts` is auto-generated
+- Committed: Yes - route files are committed, `routeTree.gen.ts` is generated
 
-**src/integrations/ (Third-Party Setup):**
-- Purpose: Configuration and initialization for external libraries
+**`src/components/ui/`:**
+- Purpose: Base UI component library
+- Generated: No
+- Committed: Yes - hand-crafted components
+
+**`src/integrations/`:**
+- Purpose: Third-party integrations isolated from main code
 - Generated: No
 - Committed: Yes
-- Pattern: Each subdirectory handles one integration (tanstack-query, future: stripe, etc.)
-- Contains: Provider components, context setup, devtools plugins
 
-**src/lib/ (Shared Code):**
-- Purpose: Utilities, configurations, core business logic
-- Generated: No
-- Committed: Yes
-- Pattern: Utilities can be imported by routes and components
-- Contains: Auth system, utilities, type definitions
+**`routeTree.gen.ts`:**
+- Purpose: Auto-generated route tree mapping
+- Generated: Yes - do NOT edit manually
+- Committed: Yes - check in generated file
+- Regenerated: When routes change, rebuild triggers generation
 
-**.planning/codebase/ (Analysis Documents):**
-- Purpose: Architecture and codebase analysis for development guidance
-- Generated: Yes (by GSD mapping tool)
-- Committed: Yes
-- Files: ARCHITECTURE.md, STRUCTURE.md, CONVENTIONS.md, TESTING.md, CONCERNS.md
+**`.planning/codebase/`:**
+- Purpose: Architecture documentation for code generation
+- Generated: Yes - created by GSD tools
+- Committed: Yes - referenced by other agents
+
+## File Size Overview
+
+- `src/routes/__root.tsx`: ~2.2KB (root layout with providers)
+- `src/routes/index.tsx`: ~774B (home page)
+- `src/components/ui/button.tsx`: ~1.8KB (button variants)
+- `src/routes/auth/$authView.tsx`: ~844B (auth UI wrapper)
+- Most files: < 1KB (clean separation of concerns)
 
 ---
 

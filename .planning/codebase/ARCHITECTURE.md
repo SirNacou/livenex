@@ -4,208 +4,199 @@
 
 ## Pattern Overview
 
-**Overall:** Full-stack React/TypeScript application built with TanStack Start (meta-framework combining TanStack Router + React Start SSR) and Nitro server runtime.
+**Overall:** Full-stack isomorphic React application using TanStack ecosystem with server-side rendering and API capabilities
 
 **Key Characteristics:**
-- Full-stack type-safe development with shared TypeScript across client/server boundaries
-- File-based routing with automatic route tree generation
-- Server-side rendering (SSR) with hydration
-- Client-side data fetching through TanStack Query (React Query)
-- Authentication system using Better Auth with Drizzle ORM database adapter
-- Modular integration layer for external libraries (TanStack Query provider, Auth client)
+- Isomorphic codebase - code runs on both server and client
+- File-based routing system using TanStack Router
+- Server-side API layer built with Elysia
+- Client-side state management via React Query
+- Authentication integrated via Better Auth
+- Database abstraction using Drizzle ORM
 
 ## Layers
 
-**Router Layer:**
-- Purpose: Manages client-side navigation, route definitions, and SSR rendering
-- Location: `src/router.tsx`, `src/routes/`, `src/routeTree.gen.ts`
-- Contains: Route definitions, route parameters, server handlers
-- Depends on: TanStack React Router, Context (QueryClient via getContext)
-- Used by: Application root, all pages
+**Server API Layer:**
+- Purpose: Provide HTTP API endpoints and authentication handlers
+- Location: `src/index.ts` (Elysia app), `src/routes/api/` (route handlers)
+- Contains: API endpoint definitions, authentication middleware, request handlers
+- Depends on: `src/lib/auth.ts` for auth logic, `src/db/` for database access
+- Used by: Client layer via treaty (Elysia client) and fetch requests
 
-**Provider Layer:**
-- Purpose: Wraps application with necessary context providers for state management
-- Location: `src/providers.tsx`, `src/integrations/tanstack-query/`
-- Contains: TanStack Query provider, Auth UI provider, context initialization
-- Depends on: React Context, TanStack Query, Better Auth UI, Router
-- Used by: Root document shell
-
-**Root Layout:**
-- Purpose: HTML shell and global layout setup
-- Location: `src/routes/__root.tsx`
-- Contains: HTML structure, theme initialization script, head metadata, devtools
-- Depends on: Providers, Router context, styles
-- Used by: All routes (wraps all page content)
-
-**Pages/Routes:**
-- Purpose: Individual page components corresponding to URL paths
-- Location: `src/routes/*.tsx`, `src/routes/auth/*.tsx`, `src/routes/account/*.tsx`, `src/routes/api/auth/*.ts`
-- Contains: Page-level components, route parameters, server handlers
-- Depends on: Router, utilities, UI components
-- Used by: Router layer for rendering
-
-**Auth Layer:**
-- Purpose: Authentication system and session management
-- Location: `src/lib/auth.ts`, `src/lib/auth-client.ts`
-- Contains: Better Auth instance (server), auth client (client)
-- Depends on: Better Auth, Drizzle adapter, PostgreSQL database
-- Used by: Auth UI provider, API routes
+**Authentication Layer:**
+- Purpose: Handle user authentication, session management, and credential validation
+- Location: `src/lib/auth.ts` (server), `src/lib/auth-client.ts` (client)
+- Contains: Better Auth configuration with Drizzle adapter, email/password plugin
+- Depends on: `src/db/` for user persistence, Better Auth framework
+- Used by: API routes (`src/routes/api/auth/$`), client providers, UI components
 
 **Database Layer:**
-- Purpose: Database connection and schema definitions
-- Location: `src/db/index.ts`, `src/db/schema.ts`
+- Purpose: Provide database connection and schema management
+- Location: `src/db/index.ts` (client), `src/db/schema.ts` (schema definitions)
 - Contains: Drizzle ORM instance, database schema
-- Depends on: Drizzle ORM, node-postgres, environment variables
-- Used by: Auth system, future data access logic
+- Depends on: PostgreSQL (via `DATABASE_URL` env var)
+- Used by: Auth layer, any server-side queries
 
-**UI Component Layer:**
-- Purpose: Reusable styled components
-- Location: `src/components/ui/`
-- Contains: Button, Toaster, and other primitive UI components
-- Depends on: Base UI React primitives, Tailwind CSS, lucide-react icons
-- Used by: Route components, pages
+**Routing Layer:**
+- Purpose: Define application routes and navigation structure
+- Location: `src/router.tsx` (router config), `src/routes/` (route files), `src/routeTree.gen.ts` (generated)
+- Contains: File-based routes using TanStack Router file convention
+- Depends on: TanStack Router, context providers
+- Used by: Root layout, navigation, deeplinks
 
-**Utils Layer:**
-- Purpose: Shared utility functions
-- Location: `src/lib/utils.ts`
-- Contains: Class name merging utility (cn)
-- Depends on: clsx, tailwind-merge
-- Used by: Components, routes
+**Presentation Layer:**
+- Purpose: Render UI components and handle user interactions
+- Location: `src/routes/` (route components), `src/components/` (shared components)
+- Contains: React components, page layouts, UI elements
+- Depends on: `src/lib/utils.ts` for utilities, `src/providers.tsx` for context
+- Used by: Browser rendering, route displays
+
+**State Management Layer:**
+- Purpose: Manage client-side application state and server data
+- Location: `src/integrations/tanstack-query/` (React Query setup)
+- Contains: QueryClient configuration, provider setup
+- Depends on: React Query, React Router context
+- Used by: All client components via useQuery hooks
+
+**Provider/Context Layer:**
+- Purpose: Wire up global providers and context
+- Location: `src/providers.tsx` (main provider), `src/__root.tsx` (root layout)
+- Contains: TanStack Query provider, auth provider, theme setup
+- Depends on: Auth client, Query client, UI frameworks
+- Used by: Root document wrapper
 
 ## Data Flow
 
-**Page Load (SSR -> Client Hydration):**
+**Server-to-Client API Flow:**
 
-1. User requests route from server
-2. TanStack Router matches route pattern in `src/routeTree.gen.ts`
-3. Root route handler in `src/routes/__root.tsx` executes, initializes providers
-4. TanStack Query context created via `getContext()` in integration layer
-5. Page component renders with server-side data from QueryClient
-6. HTML with initial state serialized to client
-7. Client hydrates React app with same context (QueryClient reused)
-8. Theme initialization script runs inline to prevent flash (THEME_INIT_SCRIPT)
+1. Client initiates request via `getTreaty()` hook (uses Elysia Eden client)
+2. Treaty translates call to HTTP request to `/api/*` route
+3. TanStack Router handler in `src/routes/api/$.ts` receives request
+4. Handler invokes Elysia app.fetch() to process with Elysia middleware
+5. Elysia routes API logic and returns response
+6. Response serialized and sent back to client
+7. Client receives response and updates state
 
-**Data Fetching (Client-side with TanStack Query):**
+**Route Loading Flow:**
 
-1. Component/page calls useQuery or similar hook from TanStack Query
-2. QueryClient (from context) manages request caching and stale data
-3. Data cached in QueryClient state, persisted across navigations
-4. Devtools panel (if enabled) shows query state: `src/integrations/tanstack-query/devtools.tsx`
+1. Route component loads via TanStack Router file-based routing
+2. Route loader executes on server before client hydration
+3. Loader calls `getTreaty().get()` to fetch data server-side
+4. Data serialized and injected into initial HTML
+5. Client hydrates with loader data via `Route.useLoaderData()`
+6. Additional data fetched via React Query for interactive updates
+7. UI re-renders when query cache updates
 
 **Authentication Flow:**
 
-1. User navigates to `/auth/$authView` route
-2. Route component (`src/routes/auth/$authView.tsx`) renders AuthView from better-auth-ui
-3. AuthView component handles form submission via authClient
-4. authClient (`src/lib/auth-client.ts`) sends request to `/api/auth/$` endpoint
-5. Server handler in `src/routes/api/auth/$.ts` delegates to `auth.handler()` from `src/lib/auth.ts`
-6. Better Auth processes authentication, updates session via database
-7. Cookies set via tanstackStartCookies plugin for session persistence
-8. Client state syncs via Auth UI provider after callback
+1. User navigates to `/auth/$authView`
+2. `src/routes/auth/$authView.tsx` renders auth UI from @daveyplate/better-auth-ui
+3. Auth UI submission posts to `/api/auth/*` route
+4. TanStack Router handler at `src/routes/api/auth/$.ts` processes request
+5. Handler calls `auth.handler(request)` from Better Auth instance
+6. Better Auth validates credentials against database via Drizzle adapter
+7. Session cookie set in response
+8. Client redirected to authenticated area (e.g., `/account`)
 
 **Account Management Flow:**
 
 1. User navigates to `/account/$accountView`
-2. Route component (`src/routes/account/$accountView.tsx`) renders AccountView from better-auth-ui
-3. AccountView manages user profile, settings, and other account operations
-4. Operations delegated through auth system and database
+2. `src/routes/account/$accountView.tsx` renders AccountView component
+3. AccountView displays user profile and settings from better-auth-ui
+4. Form submission triggers Better Auth client methods
+5. Requests proxied through `/api/auth/*` endpoints
+6. Server updates user data in database
+7. Session cookie maintained across requests
+8. Client re-fetches account data via React Query
 
 **State Management:**
 
-- **Query State:** TanStack Query (React Query) manages server state via QueryClient
-- **Auth State:** Better Auth manages session state, exposed through auth context and auth client
-- **UI State:** Component-level React state via useState hooks
-- **Theme State:** next-themes manages color scheme preference (light/dark/auto)
-- **Router State:** TanStack Router manages navigation and URL parameters
-- **Global Context:** All providers initialized in `src/providers.tsx` and root route
+- **Server State:** Persisted in PostgreSQL database via Drizzle ORM
+- **Session State:** HTTP cookies managed by Better Auth
+- **Client Cache:** React Query QueryClient maintains server data cache
+- **UI State:** React component state (form inputs, modals, etc.)
+- **Router State:** TanStack Router manages active route and params
+- **Theme State:** Theme preference stored in localStorage, applied at root
 
 ## Key Abstractions
 
-**Route Definition:**
-- Purpose: Declarative route configuration with type safety
-- Examples: `src/routes/index.tsx`, `src/routes/auth/$authView.tsx`, `src/routes/api/auth/$.ts`
-- Pattern: Using `createFileRoute()` and `createRootRouteWithContext()` from TanStack Router
-- File naming: `$` prefix for dynamic segments (e.g., `$authView` = parameter `authView`)
-- Exported as `export const Route = createFileRoute('...')({...})`
+**Treaty Service:**
+- Purpose: Isomorphic RPC-like client for calling server API
+- Examples: `src/server/get-treaty.ts`
+- Pattern: Uses `createIsomorphicFn()` to provide server and client implementations
+  - Server side: Direct treaty object from Elysia app
+  - Client side: Treaty HTTP client pointed at same origin
+  - Allows calling API as if it's local function from routes and components
 
-**Server Handler:**
-- Purpose: Handle server-side operations (API endpoints, SSR data)
-- Examples: `src/routes/api/auth/$.ts`
-- Pattern: Define `server: { handlers: { GET, POST } }` in route config
-- Server handlers receive request and can access auth, database, etc.
+**Auth Client Wrapper:**
+- Purpose: Provide type-safe authentication hooks and methods
+- Examples: `src/lib/auth-client.ts`
+- Pattern: Creates single `authClient` instance from Better Auth client factory
+  - Used by auth UI provider and components
+  - Handles session management, login, signup, logout
+  - Integrated with TanStack Router for redirects
 
-**Provider Composition:**
-- Purpose: Nest multiple context providers cleanly
-- Example: `src/providers.tsx` wraps TanStackQueryProvider and AuthUIProviderTanstack
-- Pattern: Create provider component that returns nested JSX with children passed through
-
-**Context Setup Pattern:**
-- Purpose: Initialize and reuse singleton context across SSR and client
-- Example: `src/integrations/tanstack-query/root-provider.tsx` with getContext() function
-- Pattern: Create context at module level if not exists, return cached instance
-- Ensures single QueryClient instance shared between server and client
+**Query Client Context:**
+- Purpose: Provide singleton QueryClient to all components
+- Examples: `src/integrations/tanstack-query/root-provider.tsx`
+- Pattern: Lazy initialization of QueryClient in getContext()
+  - Ensures same instance across server and client
+  - Provided via QueryClientProvider to component tree
+  - Accessed via useQuery hooks in components
 
 ## Entry Points
 
-**Application Entry:**
+**Server Entry:**
+- Location: `src/index.ts`
+- Triggers: Application start (via Vite/Nitro)
+- Responsibilities: Create Elysia app, define base API route, export app type
+
+**Client Entry:**
 - Location: `src/routes/__root.tsx`
-- Triggers: Application startup, browser requests any route
-- Responsibilities: Render HTML shell, initialize providers, set up theme, render devtools
+- Triggers: Browser page load
+- Responsibilities: Render root HTML document, setup providers, hydrate theme, include devtools
 
 **Router Entry:**
 - Location: `src/router.tsx`
-- Triggers: Application initialization, client hydration
-- Responsibilities: Create TanStack Router instance with route tree and context
+- Triggers: Route initialization
+- Responsibilities: Create TanStack Router instance, register context, configure scroll behavior
 
-**First Page Route:**
+**Home Route:**
 - Location: `src/routes/index.tsx`
-- Triggers: User visits `/` (root path)
-- Responsibilities: Render welcome page
-
-**Auth Route:**
-- Location: `src/routes/auth/$authView.tsx`
-- Triggers: User visits `/auth/{view}` (e.g., `/auth/sign-in`, `/auth/sign-up`)
-- Responsibilities: Render authentication UI (login, signup, etc.)
-
-**Auth API Route:**
-- Location: `src/routes/api/auth/$.ts`
-- Triggers: POST/GET requests to `/api/auth/*` (all auth endpoints)
-- Responsibilities: Delegate to Better Auth handler for session management
-
-**Account Route:**
-- Location: `src/routes/account/$accountView.tsx`
-- Triggers: User visits `/account/{view}` (e.g., `/account/profile`, `/account/settings`)
-- Responsibilities: Render account management UI
+- Triggers: Navigation to `/`
+- Responsibilities: Load initial data via treaty, display home page content
 
 ## Error Handling
 
-**Strategy:** Defer to framework defaults and specific library implementations
+**Strategy:** Rely on framework defaults with provider integration
 
 **Patterns:**
-- Authentication errors: Better Auth automatically handles invalid sessions, redirects managed by AuthUIProviderTanstack
-- Network errors: TanStack Query handles failed requests with retry logic, errors propagate to useQuery hooks
-- Validation errors: Zod validates environment configuration at runtime in `src/env.ts`
-- UI notifications: Sonner toast system (`src/components/ui/sonner.tsx`) used for user feedback
-- Page errors: TanStack Router has built-in error boundary support (can extend with errorComponent)
+- Route handlers in `src/routes/api/$.ts` catch all HTTP errors via Elysia
+- Better Auth handles authentication errors via built-in validation
+- React Query handles network errors with automatic retry logic
+- Components can catch and display errors via React error boundaries
+- Toast notifications via Sonner for user-facing error display (Toaster in root)
 
 ## Cross-Cutting Concerns
 
-**Logging:** Console-based logging (Sonner for toast notifications), no external logging service configured
+**Logging:** No explicit logging framework detected; uses console (development only)
 
 **Validation:** 
-- Environment variables validated with Zod via `@t3-oss/env-core` in `src/env.ts`
-- Client prefix enforcement: VITE_ prefix required for client-side env vars
-- Database schema validation handled by Drizzle ORM type system
+- Server-side: Elysia request validation, Zod in env validation
+- Client-side: Better Auth form validation, React Query error states
+- Database schema validation via Drizzle ORM type system
 
-**Authentication:**
-- Handled by Better Auth system (OAuth-like patterns supported, email/password enabled)
-- Session management via cookies (tanstackStartCookies plugin)
-- Client-side session access via authClient and Auth context
-- Protected routes can be implemented by checking session in route handlers or components
+**Authentication:** 
+- Better Auth library handles full auth flow
+- Sessions via HTTP cookies managed by Better Auth tanstack-start plugin
+- Protected routes enforced by auth middleware in route handlers
+- Client-side guards via auth client useSession hook pattern
 
-**Styling:** Tailwind CSS with theme support (light/dark/auto modes) managed by next-themes
-
-**Type Safety:** End-to-end TypeScript, no JavaScript files, shared types across client/server
+**Styling:**
+- Tailwind CSS v4 for utility styling
+- Class variance authority for component variant management
+- Theme management via next-themes with localStorage persistence
+- Dark mode support with automatic preference detection
 
 ---
 

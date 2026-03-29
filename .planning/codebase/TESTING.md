@@ -6,335 +6,307 @@
 
 **Runner:**
 - Vitest 3.0.5
-- Config: Integrated via Vite (no separate `vitest.config.ts` present; uses `vite.config.ts`)
-- Invoked with: `bun test` or `npm test`
+- Config: No `vitest.config.ts` (uses defaults)
+- No tests currently present in codebase
 
 **Assertion Library:**
-- Not explicitly configured; Vitest includes built-in `expect()` assertion API
-- Testing libraries available: `@testing-library/react` (16.3.0), `@testing-library/dom` (10.4.1)
+- @testing-library/react 16.3.0 (installed)
+- @testing-library/dom 10.4.1 (installed)
+- No custom assertion wrappers found
 
 **Run Commands:**
 ```bash
-bun test              # Run all tests (vitest run)
-npm test              # Runs "vitest run" from package.json scripts
+npm test                # Run all tests with Vitest
+npm run test            # Alias for above
 ```
 
-**Additional test dependencies:**
-- `jsdom` (28.1.0) - DOM environment for testing
-- `tsx` (4.21.0) - TypeScript execution for test files
-
-## Current Test Status
-
-**No test files found in source:**
-- No `.test.ts`, `.test.tsx`, `.spec.ts`, or `.spec.tsx` files in `src/` directory
-- Testing infrastructure is configured but not yet implemented
-- This is a greenfield testing setup ready for implementation
+**Configuration:**
+- Default Vitest patterns: `**/*.{test,spec}.?(c|m)[jt]s?(x)`
+- Default exclude: `**/node_modules/**`, `**/dist/**`, `**/cypress/**`
+- JSDOM environment configured (via @testing-library packages)
 
 ## Test File Organization
 
-**Recommended Location:**
-- Co-located with source files (preferred pattern for modern React projects)
-- Pattern: `ComponentName.test.tsx` alongside `ComponentName.tsx`
-- Utility tests: `utils.test.ts` alongside `utils.ts`
+**Location:**
+- No established pattern yet - tests would be co-located with source files or in dedicated test directory
+- Default pattern expects files named `*.test.ts`, `*.test.tsx`, `*.spec.ts`, or `*.spec.tsx`
 
-**Directory structure for tests (recommended):**
+**Naming:**
+- Recommended convention: `[ComponentName].test.tsx` for components, `[functionName].test.ts` for utilities
+- Example patterns (proposed): `Button.test.tsx`, `cn.test.ts`, `getRouter.test.ts`
+
+**Structure:**
 ```
 src/
 ├── components/
-│   └── ui/
-│       ├── button.tsx
-│       └── button.test.tsx
+│   ├── ui/
+│   │   ├── Button.tsx
+│   │   ├── Button.test.tsx           # Co-located test
+│   │   └── Toaster.test.tsx
 ├── lib/
 │   ├── utils.ts
-│   ├── utils.test.ts
-│   ├── auth.ts
-│   └── auth.test.ts
+│   └── utils.test.ts
 └── routes/
-    └── [route tests follow file structure]
+    ├── index.tsx
+    └── index.test.tsx
 ```
-
-**Naming:**
-- Pattern: `[ComponentName|filename].test.tsx` or `.test.ts`
-- Include "test" or "spec" suffix before file extension
-- Use `.tsx` for React component tests, `.ts` for utility/logic tests
 
 ## Test Structure
 
-**No active test examples in codebase** - Pattern recommendations based on Vitest + Testing Library defaults:
+**Setup Pattern:**
+No established test suite structure in codebase. Recommended approach using Testing Library:
 
-**Recommended Suite Organization:**
 ```typescript
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { Button } from '#/components/ui/button'
+// Example: Component test structure
+import { render, screen } from "@testing-library/react";
+import { Button } from "#/components/ui/button";
 
-describe('Button Component', () => {
-  describe('rendering', () => {
-    it('should render with default variant', () => {
-      render(<Button>Click me</Button>)
-      expect(screen.getByRole('button')).toBeInTheDocument()
-    })
-  })
-
-  describe('variants', () => {
-    it('should apply secondary variant classes', () => {
-      const { container } = render(<Button variant="secondary">Click</Button>)
-      expect(container.firstChild).toHaveClass('bg-secondary')
-    })
-  })
-})
+describe("Button Component", () => {
+  it("renders with default variant", () => {
+    render(<Button>Click me</Button>);
+    const button = screen.getByRole("button", { name: /click me/i });
+    expect(button).toBeInTheDocument();
+  });
+});
 ```
 
-**Patterns:**
-- Setup: No explicit setup needed (Vitest auto-discovers from `vite.config.ts`)
-- Teardown: React Testing Library auto-cleanup between tests
-- Assertion: Use `expect()` from Vitest with Testing Library matchers
+**Teardown Pattern:**
+- Vitest + @testing-library handles automatic cleanup
+- No manual teardown required per Testing Library best practices
+
+**Assertion Pattern:**
+- Expect-based assertions from vitest
+- Testing Library matchers: `toBeInTheDocument()`, `toBeVisible()`, etc.
+- DOM queries via Testing Library: `getByRole()`, `getByText()`, `queryBy*()`, `findBy*()`
 
 ## Mocking
 
-**Framework:** Vitest built-in mocking via `vi` namespace
+**Framework:** Vitest built-in mocking
+- `vi.mock()` for module mocking
+- `vi.fn()` for function mocking
+- `vi.spyOn()` for spying on methods
 
-**Recommended Patterns for this codebase:**
-
-**Module mocking (APIs, external services):**
+**Patterns:**
 ```typescript
-import { describe, it, expect, vi } from 'vitest'
-import { auth } from '#/lib/auth'
+// Mocking external modules
+vi.mock("#/lib/auth-client", () => ({
+  authClient: { login: vi.fn() },
+}));
 
-vi.mock('#/lib/auth', () => ({
-  auth: {
-    handler: vi.fn()
-  }
-}))
-```
+// Mocking functions
+const mockFn = vi.fn();
 
-**Function mocking:**
-```typescript
-import { getRouter } from '#/router'
-
-const mockRouter = {
-  navigate: vi.fn(),
-  state: { location: { pathname: '/' } }
-}
-
-vi.spyOn(router, 'navigate')
+// Spying on library calls
+const spy = vi.spyOn(console, "log");
 ```
 
 **What to Mock:**
-- External dependencies (Better-auth, Drizzle ORM)
-- Database operations (via Drizzle adapter)
-- API handlers (`auth.handler()`)
-- Navigation in component tests (`useRouter()`)
+- External API calls (use `vi.mock()` for eden/treaty client)
+- Database connections (mock drizzle-orm)
+- Authentication functions (mock `authClient` from `#/lib/auth-client`)
+- TanStack Router and Query APIs if testing logic in isolation
 
 **What NOT to Mock:**
-- Utility functions like `cn()` - test with real implementation
-- CSS/Tailwind classes - verify in rendered output, not mocked
-- React hooks provided by libraries (use actual hooks from providers)
-- Theme initialization logic - test real behavior
+- Core React functionality
+- Custom utility functions (e.g., `cn` - test real implementation)
+- Component composition unless testing integration points
+- CSS utilities and className helpers
 
 ## Fixtures and Factories
 
 **Test Data:**
-- Not yet implemented in codebase
-- Recommended approach using Faker (already installed: `@faker-js/faker`)
+No established test fixtures or factories yet. Recommended approach:
 
-**Suggested pattern:**
 ```typescript
-import { faker } from '@faker-js/faker'
+// Example: factories/user.factory.ts
+export const createMockUser = (overrides?: Partial<User>): User => ({
+  id: "1",
+  email: "test@example.com",
+  name: "Test User",
+  ...overrides,
+});
 
-// Factory function
-export function createMockUser() {
-  return {
-    id: faker.string.uuid(),
-    email: faker.internet.email(),
-    name: faker.person.fullName(),
-  }
-}
-
-// Usage in tests
-describe('Auth', () => {
-  it('should create user', () => {
-    const user = createMockUser()
-    expect(user.email).toBeDefined()
-  })
-})
+// Usage in test
+const user = createMockUser({ email: "custom@example.com" });
 ```
 
 **Location:**
-- Suggested: `src/__tests__/fixtures/` or `src/[feature]/__fixtures__/[name].ts`
-- Centralize factories for reuse across test files
+- Proposed: `src/__tests__/fixtures/` or `src/__tests__/factories/`
+- Shared fixtures across multiple test files
+- Component-specific test data in test file directly
 
 ## Coverage
 
-**Requirements:** No coverage enforcement detected in current setup
-
-**Recommended approach:**
-- Add to `vite.config.ts`: Configure Vitest coverage reporter
-- Use: `--coverage` flag or add to npm scripts
+**Requirements:** No coverage requirements enforced
+- Vitest supports coverage via `--coverage` flag
+- No CI/CD integration configured yet
 
 **View Coverage:**
 ```bash
-vitest run --coverage        # Generate coverage report
-vitest run --ui              # Interactive coverage UI
+# Generate coverage report (requires @vitest/coverage-v8 or similar)
+npm test -- --coverage
 ```
 
-**Coverage config (recommended addition to vite.config.ts):**
-```typescript
-export default defineConfig({
-  test: {
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'src/routeTree.gen.ts',
-        'drizzle/',
-      ]
-    }
-  }
-})
-```
+**Configuration (if enabled):**
+- Recommended minimum: 80% for critical paths (auth, data handling)
+- UI component tests: visual/integration testing preferred over snapshot testing
 
 ## Test Types
 
 **Unit Tests:**
-- **Scope:** Individual functions, components in isolation
-- **Approach:** Test pure functions (`cn()`, validators) without dependencies
-- **Example locations:** `src/lib/utils.test.ts`, `src/components/ui/button.test.tsx`
-- **Pattern:** Mock external dependencies, test input/output behavior
+- Scope: Individual functions and utilities
+- Approach: Test pure functions in isolation
+- Example: `cn()` utility, route loaders, data transformers
+- Pattern: No dependencies on real services/databases
 
 **Integration Tests:**
-- **Scope:** Multiple components, features working together
-- **Approach:** Test routes with providers, query client, auth context
-- **Example locations:** `src/routes/__root.test.tsx`, auth flow tests
-- **Pattern:** Render with full provider stack, test user interactions
+- Scope: Component rendering with providers
+- Approach: Render components with actual context providers
+- Example: Route components with TanStack Router context, authenticated components
+- Pattern: Use real router context and query client from providers
+
+```typescript
+// Example: Integration test with providers
+import { render, screen } from "@testing-library/react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider } from "@tanstack/react-router";
+import { App } from "#/routes/index";
+
+const TestWrapper = ({ children }) => (
+  <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router}>
+      {children}
+    </RouterProvider>
+  </QueryClientProvider>
+);
+
+it("renders app with data", () => {
+  render(<App />, { wrapper: TestWrapper });
+});
+```
 
 **E2E Tests:**
-- **Framework:** Not configured (Playwright, Cypress not in dependencies)
-- **Status:** Not used currently
-- **Recommendation:** Consider adding for critical user flows (auth, account management)
+- Framework: Not configured
+- Recommended tool: Playwright or Cypress
+- Scope: Full user workflows (auth, navigation, data display)
+- Would test: Login → Navigate → Create/Update data → Verify result
 
 ## Common Patterns
 
 **Async Testing:**
-- Testing Library handles async automatically with `waitFor()`
-- Vitest async test pattern:
-
 ```typescript
-it('should fetch data', async () => {
-  // Render component that uses useQuery
-  render(<MyComponent />)
-  
-  // Wait for async operation
+// Using async/await
+it("loads data on mount", async () => {
+  render(<MyComponent />);
+  const element = await screen.findByText("Loaded Data");
+  expect(element).toBeInTheDocument();
+});
+
+// Using queryClient utilities
+it("handles query state", async () => {
+  const { result } = renderHook(() => useQuery({ queryKey: ["test"], queryFn: () => Promise.resolve("data") }));
   await waitFor(() => {
-    expect(screen.getByText('loaded')).toBeInTheDocument()
-  })
-})
-```
-
-**Component Testing Pattern:**
-```typescript
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-
-it('should handle button click', async () => {
-  const user = userEvent.setup()
-  render(<Button variant="primary">Click me</Button>)
-  
-  const button = screen.getByRole('button')
-  await user.click(button)
-  
-  expect(button).toHaveFocus()
-})
-```
-
-**Tanstack Query Testing:**
-```typescript
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-
-const createTestQueryClient = () => new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-    mutations: { retry: false },
-  },
-})
-
-function renderWithQueryClient(component) {
-  const testQueryClient = createTestQueryClient()
-  return render(
-    <QueryClientProvider client={testQueryClient}>
-      {component}
-    </QueryClientProvider>
-  )
-}
+    expect(result.current.isSuccess).toBe(true);
+  });
+});
 ```
 
 **Error Testing:**
 ```typescript
-it('should handle errors gracefully', async () => {
-  vi.spyOn(console, 'error').mockImplementation(() => {})
+// Testing error states
+it("handles API errors gracefully", async () => {
+  vi.mock("#/server/get-treaty", () => ({
+    getTreaty: () => ({
+      get: vi.fn().mockRejectedValue(new Error("API Error")),
+    }),
+  }));
   
-  render(<ComponentThatThrows />)
-  
-  // Error should be caught and handled
-  expect(screen.getByText('Error message')).toBeInTheDocument()
-  
-  console.error.mockRestore()
-})
+  render(<Component />);
+  const errorMsg = await screen.findByText(/error/i);
+  expect(errorMsg).toBeInTheDocument();
+});
+
+// Testing error boundaries
+it("catches thrown errors", () => {
+  expect(() => {
+    render(<ErrorThrowingComponent />);
+  }).toThrow();
+});
 ```
 
-## Route Testing
-
-**Pattern for TanStack Router:**
+**Component Variant Testing:**
 ```typescript
-import { createMemoryHistory, createRootRoute, createRoute, createRouter } from '@tanstack/react-router'
-
-it('should render route component', async () => {
-  const rootRoute = createRootRoute()
-  const indexRoute = createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/',
-    component: App,
-  })
-
-  const router = createRouter({
-    routeTree: rootRoute.addChildren([indexRoute]),
-    history: createMemoryHistory(),
-  })
-
-  render(<RouterProvider router={router} />)
-  expect(screen.getByText('Welcome')).toBeInTheDocument()
-})
+// Test multiple variants (common for Button component)
+describe.each([
+  ["default"],
+  ["outline"],
+  ["destructive"],
+  ["ghost"],
+  ["link"],
+])("Button variant=%s", (variant) => {
+  it("renders correctly", () => {
+    render(<Button variant={variant}>Click</Button>);
+    const button = screen.getByRole("button");
+    expect(button).toHaveClass(`variant-${variant}`);
+  });
+});
 ```
 
-## Testing API Routes
-
-**Pattern for Better-auth handlers:**
+**Provider Setup in Tests:**
 ```typescript
-import { describe, it, expect, vi } from 'vitest'
-import { auth } from '#/lib/auth'
-
-describe('/api/auth/$ handler', () => {
-  it('should handle POST request', async () => {
-    const request = new Request('http://localhost/api/auth/signin', {
-      method: 'POST',
-      body: JSON.stringify({ email: 'test@example.com', password: 'pwd' })
-    })
-
-    const response = await auth.handler(request)
-    expect(response.status).toBe(200)
-  })
-})
+// Factory for test providers matching src/providers.tsx
+export const createTestProviders = (options?: ProviderOptions) => {
+  const queryClient = new QueryClient();
+  const router = createRouter({ routeTree, context: { queryClient } });
+  
+  return ({ children }) => (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router}>
+        <AuthUIProviderTanstack authClient={authClient} {...options}>
+          {children}
+        </AuthUIProviderTanstack>
+      </RouterProvider>
+    </QueryClientProvider>
+  );
+};
 ```
 
-## Next Steps for Test Implementation
+## Current State
 
-1. **Create test file structure** matching source organization
-2. **Start with utilities:** Test `cn()` function and other helpers first
-3. **Component tests:** Add tests for `Button` and other UI components
-4. **Route tests:** Add tests for auth routes and protected components
-5. **Integration tests:** Test complete user flows (sign-up, sign-in, account)
-6. **Setup CI/CD:** Run tests on every commit via GitHub Actions or similar
+**Tests Status:**
+- No test files present in `src/`
+- Vitest installed and ready
+- Testing Library packages installed but unused
+- Framework supports testing but coverage is 0%
+
+**Setup Complete For:**
+- ✅ Vitest test runner
+- ✅ @testing-library/react for component testing
+- ✅ @testing-library/dom for DOM queries
+- ✅ jsdom environment
+
+**Setup Pending:**
+- ❌ Test files
+- ❌ Coverage configuration
+- ❌ E2E testing (Playwright/Cypress)
+- ❌ Shared test utilities and fixtures
+- ❌ CI integration for automated testing
+
+## Recommended Testing Approach
+
+Given the architecture:
+
+1. **Start with unit tests:** Utility functions in `#/lib/` (auth, utils)
+2. **Add component tests:** UI components in `#/components/ui/`
+3. **Integration tests:** Route components with mock providers
+4. **E2E tests:** Critical user flows (auth, navigation)
+
+**Test Pyramid:**
+```
+      ⬠ E2E (5-10%)
+     ⬠⬠⬠ Integration (20-30%)
+   ⬠⬠⬠⬠⬠⬠⬠ Unit (60-75%)
+```
 
 ---
 
