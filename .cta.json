@@ -1,0 +1,30 @@
+{
+  "projectName": "livenex",
+  "mode": "file-router",
+  "typescript": true,
+  "tailwind": true,
+  "packageManager": "bun",
+  "git": false,
+  "install": true,
+  "addOnOptions": {
+    "drizzle": {
+      "database": "postgresql"
+    }
+  },
+  "includeExamples": true,
+  "envVarValues": {},
+  "routerOnly": false,
+  "version": 1,
+  "framework": "react",
+  "chosenAddOns": [
+    "tanstack-query",
+    "table",
+    "form",
+    "nitro",
+    "drizzle",
+    "better-auth",
+    "compiler",
+    "t3env",
+    "biome"
+  ]
+}
