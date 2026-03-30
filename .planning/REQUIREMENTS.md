@@ -86,30 +86,30 @@ Which phases cover which requirements. Updated during roadmap creation.
 |-------------|-------|--------|
 | MON-01 | Phase 2 | Pending |
 | MON-02 | Phase 2 | Pending |
-| MON-03 | Phase 2 | Pending |
+| MON-03 | Phase 4 | Pending |
 | MON-04 | Phase 1 | Pending |
 | MON-05 | Phase 2 | Pending |
 | MON-06 | Phase 2 | Pending |
 | MON-07 | Phase 2 | Pending |
-| DASH-01 | Phase 2 | Pending |
-| DASH-02 | Phase 4 | Pending |
-| DASH-03 | Phase 4 | Pending |
-| DASH-04 | Phase 4 | Pending |
-| DASH-05 | Phase 4 | Pending |
-| DASH-06 | Phase 4 | Pending |
-| ALRT-01 | Phase 5 | Pending |
-| ALRT-02 | Phase 5 | Pending |
-| ALRT-03 | Phase 5 | Pending |
-| ALRT-04 | Phase 5 | Pending |
-| STAT-01 | Phase 6 | Pending |
-| STAT-02 | Phase 6 | Pending |
-| STAT-03 | Phase 6 | Pending |
-| STAT-04 | Phase 6 | Pending |
-| STAT-05 | Phase 2 | Pending |
-| DEPL-01 | Phase 7 | Pending |
-| DEPL-02 | Phase 7 | Pending |
-| DEPL-03 | Phase 7 | Pending |
-| DEPL-04 | Phase 7 | Pending |
+| DASH-01 | Phase 3 | Pending |
+| DASH-02 | Phase 5 | Pending |
+| DASH-03 | Phase 5 | Pending |
+| DASH-04 | Phase 6 | Pending |
+| DASH-05 | Phase 6 | Pending |
+| DASH-06 | Phase 6 | Pending |
+| ALRT-01 | Phase 8 | Pending |
+| ALRT-02 | Phase 8 | Pending |
+| ALRT-03 | Phase 8 | Pending |
+| ALRT-04 | Phase 7 | Pending |
+| STAT-01 | Phase 9 | Pending |
+| STAT-02 | Phase 9 | Pending |
+| STAT-03 | Phase 9 | Pending |
+| STAT-04 | Phase 9 | Pending |
+| STAT-05 | Phase 3 | Pending |
+| DEPL-01 | Phase 10 | Pending |
+| DEPL-02 | Phase 10 | Pending |
+| DEPL-03 | Phase 10 | Pending |
+| DEPL-04 | Phase 10 | Pending |
 
 **Coverage:**
 - v1 requirements: 26 total
