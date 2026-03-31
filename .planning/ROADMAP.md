@@ -34,7 +34,10 @@
   3. The `monitors` table has `current_status` and `consecutive_failures` columns — confirm via schema introspection
   4. A seed script populates at least one HTTP monitor and one ping monitor for local development
   5. `drizzle-kit studio` shows all tables, columns, and enums with correct types and constraints
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 01-01-PLAN.md — Define all enums and tables in src/db/schema.ts (drizzle-kit generate verifies)
+- [ ] 01-02-PLAN.md — Write idempotent seed script, run migration, human-verify against live DB
 **Key implementation notes**:
   - **CRITICAL — composite index from day one**: `CREATE INDEX check_results_monitor_id_checked_at_idx ON check_results (monitor_id, checked_at DESC)`. At 100 monitors × 60s interval this table grows ~144k rows/day. Without this index, queries degrade within weeks and it's painful to add after real data accumulates.
   - **CRITICAL — persistent monitor state**: Add `current_status` (enum: `up`, `down`, `pending`, `unknown`), `consecutive_failures` (integer, default 0), and `last_alerted_at` (timestamp, nullable) directly on the `monitors` table. These prevent duplicate DOWN alerts when the container restarts — without them, every restart re-fires alerts for all currently-down monitors.
@@ -249,7 +252,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Database Schema | 0/? | Not started | - |
+| 1. Database Schema | 0/2 | Planned | - |
 | 2. Monitor CRUD API | 0/? | Not started | - |
 | 3. Admin Dashboard Shell | 0/? | Not started | - |
 | 4. Monitor Scheduler | 0/? | Not started | - |
