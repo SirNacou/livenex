@@ -59,7 +59,10 @@ Plans:
   3. `PUT /api/monitors/:id` updates the monitor's name, URL/host, interval, or enabled state — confirmed with a `GET /api/monitors/:id` round-trip
   4. `PATCH /api/monitors/:id/toggle` flips the `enabled` field without touching other fields
   5. `DELETE /api/monitors/:id` removes the monitor row and all associated `check_results` and `incidents` rows — no orphaned foreign key rows remain
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 02-01-PLAN.md — Create scheduler stub (src/scheduler.ts) and monitors Elysia plugin with all six CRUD handlers (src/api/monitors.ts)
+- [ ] 02-02-PLAN.md — Wire monitorsPlugin into src/index.ts and verify all endpoints end-to-end against live DB
 **Key implementation notes**:
   - **Cascade deletes**: Use `ON DELETE CASCADE` on `check_results.monitor_id` and `incidents.monitor_id` foreign keys. MON-07 requires history to be deleted with the monitor — cascades handle this cleanly without a multi-step delete in the handler.
   - **Interval validation**: Enforce a minimum interval (e.g., 10 seconds) in the Elysia input schema to prevent accidental hammering. Use Zod/Elysia's `t.Number({ minimum: 10 })`.
