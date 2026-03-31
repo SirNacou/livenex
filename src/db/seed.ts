@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
-import { db } from "#/db/index";
-import { monitorsTable } from "#/db/schema";
+import { db } from "./index.ts";
+import { monitorsTable } from "./schema.ts";
 
 async function seed() {
 	const httpName = "Example HTTP Monitor";
