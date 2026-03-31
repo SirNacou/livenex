@@ -9,7 +9,7 @@
 
 ## Phases
 
-- [ ] **Phase 1: Database Schema** — Define all tables, indexes, enums, and retention structure before any app logic
+- [x] **Phase 1: Database Schema** — Define all tables, indexes, enums, and retention structure before any app logic
 - [ ] **Phase 2: Monitor CRUD API** — Elysia endpoints for creating, reading, updating, and deleting monitors
 - [ ] **Phase 3: Admin Dashboard Shell** — Auth-gated React UI with monitor list and add/edit/delete forms
 - [ ] **Phase 4: Monitor Scheduler** — In-process check engine with per-monitor `setTimeout` loops, state machine, and incident tracking
@@ -37,7 +37,7 @@
 **Plans**: 2 plans
 Plans:
 - [x] 01-01-PLAN.md — Define all enums and tables in src/db/schema.ts (drizzle-kit generate verifies)
-- [ ] 01-02-PLAN.md — Write idempotent seed script, run migration, human-verify against live DB
+- [x] 01-02-PLAN.md — Write idempotent seed script, run migration, human-verify against live DB
 **Key implementation notes**:
   - **CRITICAL — composite index from day one**: `CREATE INDEX check_results_monitor_id_checked_at_idx ON check_results (monitor_id, checked_at DESC)`. At 100 monitors × 60s interval this table grows ~144k rows/day. Without this index, queries degrade within weeks and it's painful to add after real data accumulates.
   - **CRITICAL — persistent monitor state**: Add `current_status` (enum: `up`, `down`, `pending`, `unknown`), `consecutive_failures` (integer, default 0), and `last_alerted_at` (timestamp, nullable) directly on the `monitors` table. These prevent duplicate DOWN alerts when the container restarts — without them, every restart re-fires alerts for all currently-down monitors.
@@ -252,7 +252,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Database Schema | 1/2 | In Progress|  |
+| 1. Database Schema | 2/2 | ✅ Complete | 2026-04-01 |
 | 2. Monitor CRUD API | 0/? | Not started | - |
 | 3. Admin Dashboard Shell | 0/? | Not started | - |
 | 4. Monitor Scheduler | 0/? | Not started | - |

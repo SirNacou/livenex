@@ -9,6 +9,7 @@ import {
 	timestamp,
 	uuid,
 } from "drizzle-orm/pg-core";
+import { uuidv7 } from "uuidv7";
 
 // --- Enums ---
 
@@ -18,9 +19,7 @@ export const checkStatus = pgEnum("check_status", ["up", "down", "pending"]);
 // --- monitors ---
 
 export const monitorsTable = pgTable("monitors", {
-	id: uuid()
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
+	id: uuid().primaryKey().$defaultFn(uuidv7),
 	name: text().notNull(),
 	type: monitorType().notNull(),
 	url: text(),
@@ -47,9 +46,7 @@ export const checkResultsMonitorCheckedAtIdx = index(
 export const checkResultsTable = pgTable(
 	"check_results",
 	{
-		id: uuid()
-			.primaryKey()
-			.$defaultFn(() => crypto.randomUUID()),
+		id: uuid().primaryKey().$defaultFn(uuidv7),
 		monitorId: uuid("monitor_id")
 			.notNull()
 			.references(() => monitorsTable.id, { onDelete: "cascade" }),
@@ -71,9 +68,7 @@ export const checkResultsTable = pgTable(
 // --- incidents ---
 
 export const incidentsTable = pgTable("incidents", {
-	id: uuid()
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
+	id: uuid().primaryKey().$defaultFn(uuidv7),
 	monitorId: uuid("monitor_id")
 		.notNull()
 		.references(() => monitorsTable.id, { onDelete: "cascade" }),
@@ -85,9 +80,7 @@ export const incidentsTable = pgTable("incidents", {
 // --- notification_channels ---
 
 export const notificationChannelsTable = pgTable("notification_channels", {
-	id: uuid()
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
+	id: uuid().primaryKey().$defaultFn(uuidv7),
 	name: text().notNull(),
 	// Possible values: 'discord', 'slack'
 	type: text().notNull(),

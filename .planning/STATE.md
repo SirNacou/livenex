@@ -3,34 +3,34 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-03-31T16:09:27.843Z"
+last_updated: "2026-04-01T00:00:00.000Z"
 progress:
   total_phases: 10
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
 
 ## Current Phase
 
-Phase 1: Database Schema
-Status: Executing Phase 01
-Goal: Define all tables, indexes, enums, and retention scaffolding so every subsequent phase builds on a correct, permanent foundation.
+Phase 2: Monitor CRUD API
+Status: Phase 01 Complete — Ready to begin Phase 02
+Goal: All API endpoints for creating, reading, updating, and deleting monitors exist and return correctly typed responses, ready for the admin UI to consume.
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** A single place to know what is up/down in the home lab, with alerts that fire before you notice manually.
-**Current focus:** Phase 01 — database-schema
+**Current focus:** Phase 02 — monitor-crud-api
 
 ## Phase Progress
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | Database Schema | Plan 01 Complete |
+| 1 | Database Schema | ✅ Complete (both plans) |
 | 2 | Monitor CRUD API | Not Started |
 | 3 | Admin Dashboard Shell | Not Started |
 | 4 | Monitor Scheduler | Not Started |
@@ -55,6 +55,8 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 | Separate /api/status-page endpoint (not reusing admin endpoint) | Phase 9 | Admin endpoint returns URLs/IPs that must never appear on public page |
 | /status routes explicitly excluded from Better Auth middleware | Phase 9 | Public page must be accessible without login |
 | cap_add: [NET_RAW] in docker-compose.yml | Phase 10 | ICMP ping silently always returns "up" in Docker without this capability |
+| uuidv7 npm package not randomUUIDv7 from 'bun' | Phase 1 | drizzle-kit runs under Node.js — Bun-specific module imports cause MODULE_NOT_FOUND at generate time; uuidv7 npm package is cross-runtime and preserves v7 time-ordering |
+| Relative imports in src/db/*.ts Bun scripts | Phase 1 | moduleResolution: bundler is a TypeScript hint only; Bun runtime in Docker does not resolve #/ alias |
 
 ### Pitfalls to Watch
 
@@ -73,5 +75,5 @@ Coverage: 26/26 v1 requirements mapped
 
 ## Session Continuity
 
-Last action: Completed Phase 01-01 — full Drizzle schema with 5 tables, 2 enums, composite index (commit c14ce00)
-Next action: Begin Phase 1 Plan 02 (if it exists) or transition to Phase 2
+Last action: Completed Phase 01-02 — migrations verified in Docker, seed runs idempotently, all 5 tables live (commits 66a3008, e6e7912, d7595d5)
+Next action: Begin Phase 02 — Monitor CRUD API (Elysia endpoints for create/read/update/delete monitors)
