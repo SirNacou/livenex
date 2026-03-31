@@ -36,7 +36,7 @@
   5. `drizzle-kit studio` shows all tables, columns, and enums with correct types and constraints
 **Plans**: 2 plans
 Plans:
-- [ ] 01-01-PLAN.md — Define all enums and tables in src/db/schema.ts (drizzle-kit generate verifies)
+- [x] 01-01-PLAN.md — Define all enums and tables in src/db/schema.ts (drizzle-kit generate verifies)
 - [ ] 01-02-PLAN.md — Write idempotent seed script, run migration, human-verify against live DB
 **Key implementation notes**:
   - **CRITICAL — composite index from day one**: `CREATE INDEX check_results_monitor_id_checked_at_idx ON check_results (monitor_id, checked_at DESC)`. At 100 monitors × 60s interval this table grows ~144k rows/day. Without this index, queries degrade within weeks and it's painful to add after real data accumulates.
@@ -252,7 +252,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Database Schema | 0/2 | Planned | - |
+| 1. Database Schema | 1/2 | In Progress|  |
 | 2. Monitor CRUD API | 0/? | Not started | - |
 | 3. Admin Dashboard Shell | 0/? | Not started | - |
 | 4. Monitor Scheduler | 0/? | Not started | - |

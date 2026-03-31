@@ -10,7 +10,7 @@
 - [ ] **MON-01**: User can create an HTTP/HTTPS monitor with a URL, name, and check interval
 - [ ] **MON-02**: User can create a ping (ICMP) monitor with a hostname/IP, name, and check interval
 - [ ] **MON-03**: Each monitor has an independently configurable check interval (e.g., 30s, 1m, 5m)
-- [ ] **MON-04**: System stores every check result (status, response time, error type, timestamp) in the database
+- [x] **MON-04**: System stores every check result (status, response time, error type, timestamp) in the database
 - [ ] **MON-05**: User can enable or disable a monitor without deleting it
 - [ ] **MON-06**: User can edit an existing monitor's configuration
 - [ ] **MON-07**: User can delete a monitor and its associated check history
@@ -87,7 +87,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MON-01 | Phase 2 | Pending |
 | MON-02 | Phase 2 | Pending |
 | MON-03 | Phase 4 | Pending |
-| MON-04 | Phase 1 | Pending |
+| MON-04 | Phase 1 | Complete |
 | MON-05 | Phase 2 | Pending |
 | MON-06 | Phase 2 | Pending |
 | MON-07 | Phase 2 | Pending |

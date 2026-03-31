@@ -1,9 +1,22 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: executing
+last_updated: "2026-03-31T16:09:27.843Z"
+progress:
+  total_phases: 10
+  completed_phases: 0
+  total_plans: 2
+  completed_plans: 1
+---
+
 # Project State
 
 ## Current Phase
 
 Phase 1: Database Schema
-Status: Not Started
+Status: Executing Phase 01
 Goal: Define all tables, indexes, enums, and retention scaffolding so every subsequent phase builds on a correct, permanent foundation.
 
 ## Project Reference
@@ -11,13 +24,13 @@ Goal: Define all tables, indexes, enums, and retention scaffolding so every subs
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** A single place to know what is up/down in the home lab, with alerts that fire before you notice manually.
-**Current focus:** Phase 1
+**Current focus:** Phase 01 — database-schema
 
 ## Phase Progress
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | Database Schema | Not Started |
+| 1 | Database Schema | Plan 01 Complete |
 | 2 | Monitor CRUD API | Not Started |
 | 3 | Admin Dashboard Shell | Not Started |
 | 4 | Monitor Scheduler | Not Started |
@@ -35,6 +48,7 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 | Decision | Phase | Rationale |
 |----------|-------|-----------|
 | schedule-after-complete (setTimeout in finally) | Phase 4 | Prevents timer pileup — setInterval stacks concurrent checks when checks exceed the interval |
+| Composite index defined inline in pgTable third-arg array (not standalone) | Phase 1 | standalone index().on() outside table context causes JSON parse error in drizzle-kit |
 | Persistent monitor state (current_status, consecutive_failures) on DB | Phase 1 | Prevents duplicate DOWN alerts on container restart |
 | Composite index on (monitor_id, checked_at DESC) | Phase 1 | Required from day one — table grows 144k rows/day at 100 monitors × 60s; expensive to add after real data |
 | DNS error classification (dns_error type, no alert fired) | Phase 4 | Docker internal DNS flaps (EAI_AGAIN) would otherwise spam alerts |
@@ -59,5 +73,5 @@ Coverage: 26/26 v1 requirements mapped
 
 ## Session Continuity
 
-Last action: ROADMAP.md and STATE.md initialized
-Next action: Begin Phase 1 planning with /gsd-plan-phase 1
+Last action: Completed Phase 01-01 — full Drizzle schema with 5 tables, 2 enums, composite index (commit c14ce00)
+Next action: Begin Phase 1 Plan 02 (if it exists) or transition to Phase 2
