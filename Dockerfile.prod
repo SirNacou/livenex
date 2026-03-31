@@ -1,0 +1,40 @@
+# ---- deps stage ----
+FROM oven/bun:1 AS deps
+WORKDIR /app
+
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
+
+# ---- builder stage ----
+FROM oven/bun:1 AS builder
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+RUN bun run build
+
+# ---- runner stage ----
+FROM oven/bun:1 AS runner
+WORKDIR /app
+
+# Non-root user for security
+RUN groupadd --system --gid 1001 nodejs && \
+    useradd --system --uid 1001 --gid nodejs bunjs
+USER bunjs
+
+# Copy built output
+COPY --from=builder --chown=bunjs:nodejs /app/.output ./.output
+
+# Copy only what's needed for migrations and seeding at runtime
+COPY --from=deps --chown=bunjs:nodejs /app/node_modules ./node_modules
+COPY --chown=bunjs:nodejs drizzle ./drizzle
+COPY --chown=bunjs:nodejs drizzle.config.ts ./drizzle.config.ts
+COPY --chown=bunjs:nodejs src/db ./src/db
+COPY --chown=bunjs:nodejs src/env.ts ./src/env.ts
+COPY --chown=bunjs:nodejs package.json ./package.json
+COPY --chown=bunjs:nodejs entrypoint.sh ./entrypoint.sh
+
+EXPOSE 3000
+
+ENTRYPOINT ["./entrypoint.sh"]

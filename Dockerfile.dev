@@ -1,0 +1,18 @@
+FROM oven/bun:1
+
+WORKDIR /app
+
+# Install dependencies first (cached layer — only re-runs when lockfile changes)
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
+
+# Source is bind-mounted at runtime (see docker-compose.dev.yml)
+# This COPY is only used for the initial image build / bun tsc checks
+COPY . .
+
+COPY entrypoint.dev.sh /entrypoint.dev.sh
+RUN chmod +x /entrypoint.dev.sh
+
+EXPOSE 3000
+
+ENTRYPOINT ["/entrypoint.dev.sh"]

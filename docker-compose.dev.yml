@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-livenex} -d ${POSTGRES_DB:-livenex}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - .env
+    volumes:
+      # Bind-mount source for hot reload
+      - .:/app
+      # Preserve container's node_modules — never overwrite with host's
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data_dev:
