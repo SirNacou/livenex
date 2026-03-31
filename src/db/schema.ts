@@ -18,7 +18,9 @@ export const checkStatus = pgEnum("check_status", ["up", "down", "pending"]);
 // --- monitors ---
 
 export const monitorsTable = pgTable("monitors", {
-	id: uuid().primaryKey().defaultRandom(),
+	id: uuid()
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
 	name: text().notNull(),
 	type: monitorType().notNull(),
 	url: text(),
@@ -45,7 +47,9 @@ export const checkResultsMonitorCheckedAtIdx = index(
 export const checkResultsTable = pgTable(
 	"check_results",
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid()
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
 		monitorId: uuid("monitor_id")
 			.notNull()
 			.references(() => monitorsTable.id, { onDelete: "cascade" }),
@@ -67,7 +71,9 @@ export const checkResultsTable = pgTable(
 // --- incidents ---
 
 export const incidentsTable = pgTable("incidents", {
-	id: uuid().primaryKey().defaultRandom(),
+	id: uuid()
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
 	monitorId: uuid("monitor_id")
 		.notNull()
 		.references(() => monitorsTable.id, { onDelete: "cascade" }),
@@ -79,7 +85,9 @@ export const incidentsTable = pgTable("incidents", {
 // --- notification_channels ---
 
 export const notificationChannelsTable = pgTable("notification_channels", {
-	id: uuid().primaryKey().defaultRandom(),
+	id: uuid()
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
 	name: text().notNull(),
 	// Possible values: 'discord', 'slack'
 	type: text().notNull(),
